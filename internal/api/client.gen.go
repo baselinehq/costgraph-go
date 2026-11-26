@@ -186,6 +186,12 @@ type ConnectionResponse struct {
 	Status  string     `json:"status"`
 }
 
+// CreateKubernetesClusterRequest defines model for CreateKubernetesClusterRequest.
+type CreateKubernetesClusterRequest struct {
+	Name     string `json:"name"`
+	TenantID string `json:"tenant_id"`
+}
+
 // CreatePushConnectionRequest defines model for CreatePushConnectionRequest.
 type CreatePushConnectionRequest struct {
 	DisplayName       string `json:"display_name,omitempty"`
@@ -286,6 +292,20 @@ type IntegrationProvider struct {
 	Slug              string                        `json:"slug"`
 }
 
+// KubernetesCluster defines model for KubernetesCluster.
+type KubernetesCluster struct {
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	TenantID string `json:"tenant_id"`
+}
+
+// KubernetesClusterResponse defines model for KubernetesClusterResponse.
+type KubernetesClusterResponse struct {
+	Data    KubernetesCluster `json:"data"`
+	Message string            `json:"message"`
+	Status  string            `json:"status"`
+}
+
 // ManagedTenant defines model for ManagedTenant.
 type ManagedTenant struct {
 	Active           bool   `json:"active"`
@@ -376,6 +396,9 @@ type UpdateGoogleCloudIntegrationSettingsJSONRequestBody = GCPConnectionUpdateRe
 
 // ConnectGoogleCloudIntegrationJSONRequestBody defines body for ConnectGoogleCloudIntegration for application/json ContentType.
 type ConnectGoogleCloudIntegrationJSONRequestBody = GCPConnectRequest
+
+// CreateKubernetesClusterJSONRequestBody defines body for CreateKubernetesCluster for application/json ContentType.
+type CreateKubernetesClusterJSONRequestBody = CreateKubernetesClusterRequest
 
 // CreateOrganizationTenantJSONRequestBody defines body for CreateOrganizationTenant for application/json ContentType.
 type CreateOrganizationTenantJSONRequestBody = CreateTenantRequest
@@ -547,6 +570,20 @@ type ClientInterface interface {
 
 	// CurrentIdentity performs a GET /api/v1/me (the `CurrentIdentity` operationId) request.
 	CurrentIdentity(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateKubernetesClusterWithBody performs a POST /api/v1/organizations/{org_id}/kubernetes-clusters (the `CreateKubernetesCluster` operationId) request,
+	// with any type of body and a specified content type.
+	CreateKubernetesClusterWithBody(ctx context.Context, orgId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateKubernetesCluster performs a POST /api/v1/organizations/{org_id}/kubernetes-clusters (the `CreateKubernetesCluster` operationId) request.
+	// Takes a body of the `application/json` content type.
+	CreateKubernetesCluster(ctx context.Context, orgId string, body CreateKubernetesClusterJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteKubernetesCluster performs a DELETE /api/v1/organizations/{org_id}/kubernetes-clusters/{id} (the `DeleteKubernetesCluster` operationId) request.
+	DeleteKubernetesCluster(ctx context.Context, orgId string, id string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetKubernetesCluster performs a GET /api/v1/organizations/{org_id}/kubernetes-clusters/{id} (the `GetKubernetesCluster` operationId) request.
+	GetKubernetesCluster(ctx context.Context, orgId string, id string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ListOrganizationTenants performs a GET /api/v1/organizations/{org_id}/tenants (the `ListOrganizationTenants` operationId) request.
 	ListOrganizationTenants(ctx context.Context, orgId string, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -905,6 +942,60 @@ func (c *Client) ConnectGoogleCloudIntegration(ctx context.Context, body Connect
 // CurrentIdentity performs a GET /api/v1/me (the `CurrentIdentity` operationId) request.
 func (c *Client) CurrentIdentity(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewCurrentIdentityRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CreateKubernetesClusterWithBody performs a POST /api/v1/organizations/{org_id}/kubernetes-clusters (the `CreateKubernetesCluster` operationId) request,
+// with any type of body and a specified content type.
+func (c *Client) CreateKubernetesClusterWithBody(ctx context.Context, orgId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateKubernetesClusterRequestWithBody(c.Server, orgId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CreateKubernetesCluster performs a POST /api/v1/organizations/{org_id}/kubernetes-clusters (the `CreateKubernetesCluster` operationId) request.
+// Takes a body of the `application/json` content type.
+func (c *Client) CreateKubernetesCluster(ctx context.Context, orgId string, body CreateKubernetesClusterJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateKubernetesClusterRequest(c.Server, orgId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// DeleteKubernetesCluster performs a DELETE /api/v1/organizations/{org_id}/kubernetes-clusters/{id} (the `DeleteKubernetesCluster` operationId) request.
+func (c *Client) DeleteKubernetesCluster(ctx context.Context, orgId string, id string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteKubernetesClusterRequest(c.Server, orgId, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// GetKubernetesCluster performs a GET /api/v1/organizations/{org_id}/kubernetes-clusters/{id} (the `GetKubernetesCluster` operationId) request.
+func (c *Client) GetKubernetesCluster(ctx context.Context, orgId string, id string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetKubernetesClusterRequest(c.Server, orgId, id)
 	if err != nil {
 		return nil, err
 	}
@@ -1663,6 +1754,135 @@ func NewCurrentIdentityRequest(server string) (*http.Request, error) {
 	return req, nil
 }
 
+// NewCreateKubernetesClusterRequest calls the generic CreateKubernetesCluster builder with application/json body
+func NewCreateKubernetesClusterRequest(server string, orgId string, body CreateKubernetesClusterJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateKubernetesClusterRequestWithBody(server, orgId, "application/json", bodyReader)
+}
+
+// NewCreateKubernetesClusterRequestWithBody constructs an http.Request for the CreateKubernetesCluster method, with any body, and a specified content type
+func NewCreateKubernetesClusterRequestWithBody(server string, orgId string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "org_id", orgId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/api/v1/organizations/" + pathParam0 + "/kubernetes-clusters"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteKubernetesClusterRequest constructs an http.Request for the DeleteKubernetesCluster method
+func NewDeleteKubernetesClusterRequest(server string, orgId string, id string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "org_id", orgId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/api/v1/organizations/" + pathParam0 + "/kubernetes-clusters/" + pathParam1
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetKubernetesClusterRequest constructs an http.Request for the GetKubernetesCluster method
+func NewGetKubernetesClusterRequest(server string, orgId string, id string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "org_id", orgId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/api/v1/organizations/" + pathParam0 + "/kubernetes-clusters/" + pathParam1
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewListOrganizationTenantsRequest constructs an http.Request for the ListOrganizationTenants method
 func NewListOrganizationTenantsRequest(server string, orgId string) (*http.Request, error) {
 	var err error
@@ -2048,6 +2268,26 @@ type ClientWithResponsesInterface interface {
 	//
 	// Returns a wrapper object for the known response body format(s).
 	CurrentIdentityWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*CurrentIdentityResponse, error)
+
+	// CreateKubernetesClusterWithBodyWithResponse performs a POST /api/v1/organizations/{org_id}/kubernetes-clusters (the `CreateKubernetesCluster` operationId) request,
+	// with any type of body and a specified content type.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	CreateKubernetesClusterWithBodyWithResponse(ctx context.Context, orgId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateKubernetesClusterResponse, error)
+
+	// CreateKubernetesClusterWithResponse performs a POST /api/v1/organizations/{org_id}/kubernetes-clusters (the `CreateKubernetesCluster` operationId) request.
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	CreateKubernetesClusterWithResponse(ctx context.Context, orgId string, body CreateKubernetesClusterJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateKubernetesClusterResponse, error)
+
+	// DeleteKubernetesClusterWithResponse performs a DELETE /api/v1/organizations/{org_id}/kubernetes-clusters/{id} (the `DeleteKubernetesCluster` operationId) request.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	DeleteKubernetesClusterWithResponse(ctx context.Context, orgId string, id string, reqEditors ...RequestEditorFn) (*DeleteKubernetesClusterResponse, error)
+
+	// GetKubernetesClusterWithResponse performs a GET /api/v1/organizations/{org_id}/kubernetes-clusters/{id} (the `GetKubernetesCluster` operationId) request.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	GetKubernetesClusterWithResponse(ctx context.Context, orgId string, id string, reqEditors ...RequestEditorFn) (*GetKubernetesClusterResponse, error)
 
 	// ListOrganizationTenantsWithResponse performs a GET /api/v1/organizations/{org_id}/tenants (the `ListOrganizationTenants` operationId) request.
 	//
@@ -2901,6 +3141,150 @@ func (r CurrentIdentityResponse) ContentType() string {
 	return ""
 }
 
+type CreateKubernetesClusterResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON201 the response for an HTTP 201 `application/json` response
+	JSON201 *KubernetesClusterResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *ErrorResponse
+}
+
+// GetJSON201 returns the response for an HTTP 201 `application/json` response
+func (r CreateKubernetesClusterResponse) GetJSON201() *KubernetesClusterResponse {
+	return r.JSON201
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r CreateKubernetesClusterResponse) GetJSONDefault() *ErrorResponse {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r CreateKubernetesClusterResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateKubernetesClusterResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateKubernetesClusterResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CreateKubernetesClusterResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type DeleteKubernetesClusterResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *SuccessResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r DeleteKubernetesClusterResponse) GetJSON200() *SuccessResponse {
+	return r.JSON200
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r DeleteKubernetesClusterResponse) GetJSONDefault() *ErrorResponse {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r DeleteKubernetesClusterResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteKubernetesClusterResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteKubernetesClusterResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DeleteKubernetesClusterResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetKubernetesClusterResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *KubernetesClusterResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetKubernetesClusterResponse) GetJSON200() *KubernetesClusterResponse {
+	return r.JSON200
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r GetKubernetesClusterResponse) GetJSONDefault() *ErrorResponse {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r GetKubernetesClusterResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetKubernetesClusterResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetKubernetesClusterResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetKubernetesClusterResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type ListOrganizationTenantsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -3414,6 +3798,50 @@ func (c *ClientWithResponses) CurrentIdentityWithResponse(ctx context.Context, r
 		return nil, err
 	}
 	return ParseCurrentIdentityResponse(rsp)
+}
+
+// CreateKubernetesClusterWithBodyWithResponse performs a POST /api/v1/organizations/{org_id}/kubernetes-clusters (the `CreateKubernetesCluster` operationId) request,
+// with any type of body and a specified content type.
+//
+// Returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) CreateKubernetesClusterWithBodyWithResponse(ctx context.Context, orgId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateKubernetesClusterResponse, error) {
+	rsp, err := c.CreateKubernetesClusterWithBody(ctx, orgId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateKubernetesClusterResponse(rsp)
+}
+
+// CreateKubernetesClusterWithResponse performs a POST /api/v1/organizations/{org_id}/kubernetes-clusters (the `CreateKubernetesCluster` operationId) request.
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) CreateKubernetesClusterWithResponse(ctx context.Context, orgId string, body CreateKubernetesClusterJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateKubernetesClusterResponse, error) {
+	rsp, err := c.CreateKubernetesCluster(ctx, orgId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateKubernetesClusterResponse(rsp)
+}
+
+// DeleteKubernetesClusterWithResponse performs a DELETE /api/v1/organizations/{org_id}/kubernetes-clusters/{id} (the `DeleteKubernetesCluster` operationId) request.
+//
+// Returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) DeleteKubernetesClusterWithResponse(ctx context.Context, orgId string, id string, reqEditors ...RequestEditorFn) (*DeleteKubernetesClusterResponse, error) {
+	rsp, err := c.DeleteKubernetesCluster(ctx, orgId, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteKubernetesClusterResponse(rsp)
+}
+
+// GetKubernetesClusterWithResponse performs a GET /api/v1/organizations/{org_id}/kubernetes-clusters/{id} (the `GetKubernetesCluster` operationId) request.
+//
+// Returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) GetKubernetesClusterWithResponse(ctx context.Context, orgId string, id string, reqEditors ...RequestEditorFn) (*GetKubernetesClusterResponse, error) {
+	rsp, err := c.GetKubernetesCluster(ctx, orgId, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetKubernetesClusterResponse(rsp)
 }
 
 // ListOrganizationTenantsWithResponse performs a GET /api/v1/organizations/{org_id}/tenants (the `ListOrganizationTenants` operationId) request.
@@ -4043,6 +4471,105 @@ func ParseCurrentIdentityResponse(rsp *http.Response) (*CurrentIdentityResponse,
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest IdentityResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateKubernetesClusterResponse parses an HTTP response from a CreateKubernetesClusterWithResponse call
+func ParseCreateKubernetesClusterResponse(rsp *http.Response) (*CreateKubernetesClusterResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateKubernetesClusterResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest KubernetesClusterResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteKubernetesClusterResponse parses an HTTP response from a DeleteKubernetesClusterWithResponse call
+func ParseDeleteKubernetesClusterResponse(rsp *http.Response) (*DeleteKubernetesClusterResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteKubernetesClusterResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SuccessResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetKubernetesClusterResponse parses an HTTP response from a GetKubernetesClusterWithResponse call
+func ParseGetKubernetesClusterResponse(rsp *http.Response) (*GetKubernetesClusterResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetKubernetesClusterResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest KubernetesClusterResponse
 		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}

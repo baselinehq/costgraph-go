@@ -51,3 +51,7 @@ type AIGatewaySettings = api.AIGatewaySettings
 type AIGatewayUpdateRequest = api.AIGatewayUpdateRequest
 
 type CatalogModel = api.CatalogModel
+
+type KubernetesCluster = api.KubernetesCluster
+
+type CreateKubernetesClusterRequest = api.CreateKubernetesClusterRequest
