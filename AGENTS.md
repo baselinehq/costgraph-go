@@ -3,10 +3,11 @@
 ## Scope
 
 - This module is the importable management client used by the CostGraph Terraform provider. Keep Terraform schemas, state, diagnostics, imports, and lifecycle decisions in the provider repository.
-- The client covers API-key identity, provider and connection discovery, FOCUS push lifecycle, organization tenant administration, AWS role connections, Google Cloud impersonation connections, and AI gateway settings. It is not a complete CostGraph SDK.
+- The client covers API-key identity, provider and connection discovery, FOCUS push lifecycle, organization tenant administration, AWS role connections, Google Cloud impersonation connections, Azure service-principal exports, AI gateway settings, Kubernetes registrations, and virtual-tag configurations. It is not a complete CostGraph SDK.
 - Match the actual public API. Inspect its routes, authentication, request/response envelopes, tenant boundaries, and permissions before adding an operation. A dashboard endpoint does not establish API-key access.
 - The read and management contracts are introduced by separate backend Terraform integration and management changes. Do not claim availability on deployments that lack those changes.
-- Organization tenant and cloud administration require an active organization owner and explicit `organization:manage` scope. Do not weaken or implicitly add that scope. Cloud SDK requests support AWS roles and Google Cloud impersonation only.
+- Organization tenant and cloud administration require an active organization owner and explicit `organization:manage` scope. Do not weaken or implicitly add that scope. AWS uses role assumption, Google Cloud uses impersonation, and Azure accepts a request-only service-principal secret with a nonsecret rotation counter. Kubernetes management reserves registration identity without reporting collector state.
+- Virtual-tag lookup and management require explicit tenant-bound `virtual-tags:read` or `virtual-tags:write` scopes. Write access includes read access. Organization management does not grant these scopes or another tenant's attribution access. Keep aggregate revision preconditions and stable rule references intact.
 
 ## Contract and client
 
@@ -15,7 +16,7 @@
 - Keep the public facade in package `costgraph`. Preserve null/omitted values where the API distinguishes them. Use optional scalar and map pointers for partial updates; nil preserves, while an explicit empty value clears only when the API supports it. Add only the API capabilities the caller needs.
 - Every operation uses the configured deployment URL and `X-API-Key`. Support deployment roots and reverse-proxy path prefixes. Never fall back to the hosted API or read a browser/CLI credential file.
 - Retain normal certificate verification. Do not follow redirects with credentials. Do not expose API keys, request URLs, raw response bodies, or arbitrary server messages in diagnostics.
-- Use contexts and bounded request timeouts. Do not retry non-idempotent writes automatically. Treat permission/transport errors separately from resource absence.
+- Use contexts and bounded request timeouts. Do not retry non-idempotent writes automatically. Treat permission/transport errors separately from resource absence. New APIs use the whitelisted `not_found` machine code for object absence so an unavailable route cannot silently remove Terraform state.
 - Connection `id` is the internal UUID. `connection_id` is the public `fpc_` ingestion identifier. Do not interchange them.
 
 ## Verification and shipping
