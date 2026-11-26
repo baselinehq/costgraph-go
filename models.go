@@ -55,3 +55,13 @@ type CatalogModel = api.CatalogModel
 type KubernetesCluster = api.KubernetesCluster
 
 type CreateKubernetesClusterRequest = api.CreateKubernetesClusterRequest
+
+type VirtualTag = api.VirtualTag
+
+type VirtualTagMetadata = api.VirtualTagMetadata
+
+type VirtualTagRule = api.VirtualTagRule
+
+type VirtualTagRuleInput = api.VirtualTagRuleInput
+
+type VirtualTagRequest = api.VirtualTagRequest

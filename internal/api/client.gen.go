@@ -368,9 +368,113 @@ type UpdateTenantRequest struct {
 	Name string `json:"name"`
 }
 
+// VirtualTag defines model for VirtualTag.
+type VirtualTag struct {
+	Description   string           `json:"description"`
+	ID            string           `json:"id"`
+	Key           string           `json:"key"`
+	Revision      string           `json:"revision"`
+	RuleCount     int              `json:"rule_count"`
+	Rules         []VirtualTagRule `json:"rules"`
+	RulesRevision int64            `json:"rules_revision"`
+	TenantID      string           `json:"tenant_id"`
+}
+
+// VirtualTagMetadata defines model for VirtualTagMetadata.
+type VirtualTagMetadata struct {
+	Description   string `json:"description"`
+	ID            string `json:"id"`
+	Key           string `json:"key"`
+	Revision      string `json:"revision"`
+	RuleCount     int    `json:"rule_count"`
+	RulesRevision int64  `json:"rules_revision"`
+	TenantID      string `json:"tenant_id"`
+}
+
+// VirtualTagPage defines model for VirtualTagPage.
+type VirtualTagPage struct {
+	Items      []VirtualTagMetadata `json:"items"`
+	NextCursor *string              `json:"next_cursor"`
+}
+
+// VirtualTagPageResponse defines model for VirtualTagPageResponse.
+type VirtualTagPageResponse struct {
+	Data   VirtualTagPage `json:"data"`
+	Status string         `json:"status"`
+}
+
+// VirtualTagRequest defines model for VirtualTagRequest.
+type VirtualTagRequest struct {
+	Description      string                `json:"description"`
+	ExpectedRevision *string               `json:"expected_revision,omitempty"`
+	Key              string                `json:"key"`
+	Rules            []VirtualTagRuleInput `json:"rules"`
+}
+
+// VirtualTagResponse defines model for VirtualTagResponse.
+type VirtualTagResponse struct {
+	Data   VirtualTag `json:"data"`
+	Status string     `json:"status"`
+}
+
+// VirtualTagRule defines model for VirtualTagRule.
+type VirtualTagRule struct {
+	Active        bool    `json:"active"`
+	Expression    string  `json:"expression"`
+	ID            string  `json:"id"`
+	InheritedFrom *string `json:"inherited_from"`
+	RuleKey       string  `json:"rule_key"`
+	Scope         string  `json:"scope"`
+	Value         *string `json:"value"`
+}
+
+// VirtualTagRuleInput defines model for VirtualTagRuleInput.
+type VirtualTagRuleInput struct {
+	Active        *bool   `json:"active,omitempty"`
+	Expression    string  `json:"expression"`
+	InheritedFrom *string `json:"inherited_from"`
+	RuleKey       string  `json:"rule_key"`
+	Scope         string  `json:"scope"`
+	Value         *string `json:"value"`
+}
+
 // SearchAIGatewayModelsParams defines parameters for SearchAIGatewayModels.
 type SearchAIGatewayModelsParams struct {
 	Q *string `form:"q,omitempty" json:"q,omitempty"`
+}
+
+// ListVirtualTagConfigurationsParams defines parameters for ListVirtualTagConfigurations.
+type ListVirtualTagConfigurationsParams struct {
+	Limit    *int    `form:"limit,omitempty" json:"limit,omitempty"`
+	After    *string `form:"after,omitempty" json:"after,omitempty"`
+	TenantID string  `json:"X-CostGraph-Tenant-ID"`
+}
+
+// CreateVirtualTagConfigurationParams defines parameters for CreateVirtualTagConfiguration.
+type CreateVirtualTagConfigurationParams struct {
+	TenantID string `json:"X-CostGraph-Tenant-ID"`
+}
+
+// LookupVirtualTagConfigurationParams defines parameters for LookupVirtualTagConfiguration.
+type LookupVirtualTagConfigurationParams struct {
+	Key      string `form:"key" json:"key"`
+	TenantID string `json:"X-CostGraph-Tenant-ID"`
+}
+
+// DeleteVirtualTagConfigurationParams defines parameters for DeleteVirtualTagConfiguration.
+type DeleteVirtualTagConfigurationParams struct {
+	TenantID string `json:"X-CostGraph-Tenant-ID"`
+	Revision string `json:"If-Match"`
+}
+
+// GetVirtualTagConfigurationParams defines parameters for GetVirtualTagConfiguration.
+type GetVirtualTagConfigurationParams struct {
+	TenantID string `json:"X-CostGraph-Tenant-ID"`
+}
+
+// UpdateVirtualTagConfigurationParams defines parameters for UpdateVirtualTagConfiguration.
+type UpdateVirtualTagConfigurationParams struct {
+	TenantID string `json:"X-CostGraph-Tenant-ID"`
 }
 
 // CreateAIGatewayConnectionJSONRequestBody defines body for CreateAIGatewayConnection for application/json ContentType.
@@ -405,6 +509,12 @@ type CreateOrganizationTenantJSONRequestBody = CreateTenantRequest
 
 // UpdateOrganizationTenantJSONRequestBody defines body for UpdateOrganizationTenant for application/json ContentType.
 type UpdateOrganizationTenantJSONRequestBody = UpdateTenantRequest
+
+// CreateVirtualTagConfigurationJSONRequestBody defines body for CreateVirtualTagConfiguration for application/json ContentType.
+type CreateVirtualTagConfigurationJSONRequestBody = VirtualTagRequest
+
+// UpdateVirtualTagConfigurationJSONRequestBody defines body for UpdateVirtualTagConfiguration for application/json ContentType.
+type UpdateVirtualTagConfigurationJSONRequestBody = VirtualTagRequest
 
 // RequestEditorFn is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
@@ -609,6 +719,34 @@ type ClientInterface interface {
 	// UpdateOrganizationTenant performs a PATCH /api/v1/organizations/{org_id}/tenants/{tenant_id} (the `UpdateOrganizationTenant` operationId) request.
 	// Takes a body of the `application/json` content type.
 	UpdateOrganizationTenant(ctx context.Context, orgId string, tenantId string, body UpdateOrganizationTenantJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListVirtualTagConfigurations performs a GET /api/v1/tenant/virtual-tag-configurations (the `ListVirtualTagConfigurations` operationId) request.
+	ListVirtualTagConfigurations(ctx context.Context, params *ListVirtualTagConfigurationsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateVirtualTagConfigurationWithBody performs a POST /api/v1/tenant/virtual-tag-configurations (the `CreateVirtualTagConfiguration` operationId) request,
+	// with any type of body and a specified content type.
+	CreateVirtualTagConfigurationWithBody(ctx context.Context, params *CreateVirtualTagConfigurationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateVirtualTagConfiguration performs a POST /api/v1/tenant/virtual-tag-configurations (the `CreateVirtualTagConfiguration` operationId) request.
+	// Takes a body of the `application/json` content type.
+	CreateVirtualTagConfiguration(ctx context.Context, params *CreateVirtualTagConfigurationParams, body CreateVirtualTagConfigurationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// LookupVirtualTagConfiguration performs a GET /api/v1/tenant/virtual-tag-configurations/lookup (the `LookupVirtualTagConfiguration` operationId) request.
+	LookupVirtualTagConfiguration(ctx context.Context, params *LookupVirtualTagConfigurationParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteVirtualTagConfiguration performs a DELETE /api/v1/tenant/virtual-tag-configurations/{id} (the `DeleteVirtualTagConfiguration` operationId) request.
+	DeleteVirtualTagConfiguration(ctx context.Context, id string, params *DeleteVirtualTagConfigurationParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetVirtualTagConfiguration performs a GET /api/v1/tenant/virtual-tag-configurations/{id} (the `GetVirtualTagConfiguration` operationId) request.
+	GetVirtualTagConfiguration(ctx context.Context, id string, params *GetVirtualTagConfigurationParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateVirtualTagConfigurationWithBody performs a PUT /api/v1/tenant/virtual-tag-configurations/{id} (the `UpdateVirtualTagConfiguration` operationId) request,
+	// with any type of body and a specified content type.
+	UpdateVirtualTagConfigurationWithBody(ctx context.Context, id string, params *UpdateVirtualTagConfigurationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateVirtualTagConfiguration performs a PUT /api/v1/tenant/virtual-tag-configurations/{id} (the `UpdateVirtualTagConfiguration` operationId) request.
+	// Takes a body of the `application/json` content type.
+	UpdateVirtualTagConfiguration(ctx context.Context, id string, params *UpdateVirtualTagConfigurationParams, body UpdateVirtualTagConfigurationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
 // ListIntegrationConnections performs a GET /api/v1/integrations (the `ListIntegrationConnections` operationId) request.
@@ -1091,6 +1229,114 @@ func (c *Client) UpdateOrganizationTenantWithBody(ctx context.Context, orgId str
 // Takes a body of the `application/json` content type.
 func (c *Client) UpdateOrganizationTenant(ctx context.Context, orgId string, tenantId string, body UpdateOrganizationTenantJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewUpdateOrganizationTenantRequest(c.Server, orgId, tenantId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ListVirtualTagConfigurations performs a GET /api/v1/tenant/virtual-tag-configurations (the `ListVirtualTagConfigurations` operationId) request.
+func (c *Client) ListVirtualTagConfigurations(ctx context.Context, params *ListVirtualTagConfigurationsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListVirtualTagConfigurationsRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CreateVirtualTagConfigurationWithBody performs a POST /api/v1/tenant/virtual-tag-configurations (the `CreateVirtualTagConfiguration` operationId) request,
+// with any type of body and a specified content type.
+func (c *Client) CreateVirtualTagConfigurationWithBody(ctx context.Context, params *CreateVirtualTagConfigurationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateVirtualTagConfigurationRequestWithBody(c.Server, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CreateVirtualTagConfiguration performs a POST /api/v1/tenant/virtual-tag-configurations (the `CreateVirtualTagConfiguration` operationId) request.
+// Takes a body of the `application/json` content type.
+func (c *Client) CreateVirtualTagConfiguration(ctx context.Context, params *CreateVirtualTagConfigurationParams, body CreateVirtualTagConfigurationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateVirtualTagConfigurationRequest(c.Server, params, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// LookupVirtualTagConfiguration performs a GET /api/v1/tenant/virtual-tag-configurations/lookup (the `LookupVirtualTagConfiguration` operationId) request.
+func (c *Client) LookupVirtualTagConfiguration(ctx context.Context, params *LookupVirtualTagConfigurationParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewLookupVirtualTagConfigurationRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// DeleteVirtualTagConfiguration performs a DELETE /api/v1/tenant/virtual-tag-configurations/{id} (the `DeleteVirtualTagConfiguration` operationId) request.
+func (c *Client) DeleteVirtualTagConfiguration(ctx context.Context, id string, params *DeleteVirtualTagConfigurationParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteVirtualTagConfigurationRequest(c.Server, id, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// GetVirtualTagConfiguration performs a GET /api/v1/tenant/virtual-tag-configurations/{id} (the `GetVirtualTagConfiguration` operationId) request.
+func (c *Client) GetVirtualTagConfiguration(ctx context.Context, id string, params *GetVirtualTagConfigurationParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetVirtualTagConfigurationRequest(c.Server, id, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// UpdateVirtualTagConfigurationWithBody performs a PUT /api/v1/tenant/virtual-tag-configurations/{id} (the `UpdateVirtualTagConfiguration` operationId) request,
+// with any type of body and a specified content type.
+func (c *Client) UpdateVirtualTagConfigurationWithBody(ctx context.Context, id string, params *UpdateVirtualTagConfigurationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateVirtualTagConfigurationRequestWithBody(c.Server, id, params, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// UpdateVirtualTagConfiguration performs a PUT /api/v1/tenant/virtual-tag-configurations/{id} (the `UpdateVirtualTagConfiguration` operationId) request.
+// Takes a body of the `application/json` content type.
+func (c *Client) UpdateVirtualTagConfiguration(ctx context.Context, id string, params *UpdateVirtualTagConfigurationParams, body UpdateVirtualTagConfigurationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateVirtualTagConfigurationRequest(c.Server, id, params, body)
 	if err != nil {
 		return nil, err
 	}
@@ -2100,6 +2346,364 @@ func NewUpdateOrganizationTenantRequestWithBody(server string, orgId string, ten
 	return req, nil
 }
 
+// NewListVirtualTagConfigurationsRequest constructs an http.Request for the ListVirtualTagConfigurations method
+func NewListVirtualTagConfigurationsRequest(server string, params *ListVirtualTagConfigurationsParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/api/v1/tenant/virtual-tag-configurations"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Limit != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "limit", *params.Limit, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "integer", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if params.After != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "after", *params.After, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-CostGraph-Tenant-ID", params.TenantID, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("X-CostGraph-Tenant-ID", headerParam0)
+
+	}
+
+	return req, nil
+}
+
+// NewCreateVirtualTagConfigurationRequest calls the generic CreateVirtualTagConfiguration builder with application/json body
+func NewCreateVirtualTagConfigurationRequest(server string, params *CreateVirtualTagConfigurationParams, body CreateVirtualTagConfigurationJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateVirtualTagConfigurationRequestWithBody(server, params, "application/json", bodyReader)
+}
+
+// NewCreateVirtualTagConfigurationRequestWithBody constructs an http.Request for the CreateVirtualTagConfiguration method, with any body, and a specified content type
+func NewCreateVirtualTagConfigurationRequestWithBody(server string, params *CreateVirtualTagConfigurationParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/api/v1/tenant/virtual-tag-configurations"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-CostGraph-Tenant-ID", params.TenantID, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("X-CostGraph-Tenant-ID", headerParam0)
+
+	}
+
+	return req, nil
+}
+
+// NewLookupVirtualTagConfigurationRequest constructs an http.Request for the LookupVirtualTagConfiguration method
+func NewLookupVirtualTagConfigurationRequest(server string, params *LookupVirtualTagConfigurationParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/api/v1/tenant/virtual-tag-configurations/lookup"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if queryFrag, err := runtime.StyleParamWithOptions("form", true, "key", params.Key, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+			return nil, err
+		} else {
+			for _, qp := range strings.Split(queryFrag, "&") {
+				rawQueryFragments = append(rawQueryFragments, qp)
+			}
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-CostGraph-Tenant-ID", params.TenantID, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("X-CostGraph-Tenant-ID", headerParam0)
+
+	}
+
+	return req, nil
+}
+
+// NewDeleteVirtualTagConfigurationRequest constructs an http.Request for the DeleteVirtualTagConfiguration method
+func NewDeleteVirtualTagConfigurationRequest(server string, id string, params *DeleteVirtualTagConfigurationParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/api/v1/tenant/virtual-tag-configurations/" + pathParam0
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-CostGraph-Tenant-ID", params.TenantID, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("X-CostGraph-Tenant-ID", headerParam0)
+
+		var headerParam1 string
+
+		headerParam1, err = runtime.StyleParamWithOptions("simple", false, "If-Match", params.Revision, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("If-Match", headerParam1)
+
+	}
+
+	return req, nil
+}
+
+// NewGetVirtualTagConfigurationRequest constructs an http.Request for the GetVirtualTagConfiguration method
+func NewGetVirtualTagConfigurationRequest(server string, id string, params *GetVirtualTagConfigurationParams) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/api/v1/tenant/virtual-tag-configurations/" + pathParam0
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-CostGraph-Tenant-ID", params.TenantID, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("X-CostGraph-Tenant-ID", headerParam0)
+
+	}
+
+	return req, nil
+}
+
+// NewUpdateVirtualTagConfigurationRequest calls the generic UpdateVirtualTagConfiguration builder with application/json body
+func NewUpdateVirtualTagConfigurationRequest(server string, id string, params *UpdateVirtualTagConfigurationParams, body UpdateVirtualTagConfigurationJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateVirtualTagConfigurationRequestWithBody(server, id, params, "application/json", bodyReader)
+}
+
+// NewUpdateVirtualTagConfigurationRequestWithBody constructs an http.Request for the UpdateVirtualTagConfiguration method, with any body, and a specified content type
+func NewUpdateVirtualTagConfigurationRequestWithBody(server string, id string, params *UpdateVirtualTagConfigurationParams, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/api/v1/tenant/virtual-tag-configurations/" + pathParam0
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPut, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	if params != nil {
+
+		var headerParam0 string
+
+		headerParam0, err = runtime.StyleParamWithOptions("simple", false, "X-CostGraph-Tenant-ID", params.TenantID, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationHeader, Type: "string", Format: ""})
+		if err != nil {
+			return nil, err
+		}
+
+		req.Header.Set("X-CostGraph-Tenant-ID", headerParam0)
+
+	}
+
+	return req, nil
+}
+
 func (c *Client) applyEditors(ctx context.Context, req *http.Request, additionalEditors []RequestEditorFn) error {
 	for _, r := range c.RequestEditors {
 		if err := r(ctx, req); err != nil {
@@ -2323,6 +2927,46 @@ type ClientWithResponsesInterface interface {
 	// UpdateOrganizationTenantWithResponse performs a PATCH /api/v1/organizations/{org_id}/tenants/{tenant_id} (the `UpdateOrganizationTenant` operationId) request.
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	UpdateOrganizationTenantWithResponse(ctx context.Context, orgId string, tenantId string, body UpdateOrganizationTenantJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateOrganizationTenantResponse, error)
+
+	// ListVirtualTagConfigurationsWithResponse performs a GET /api/v1/tenant/virtual-tag-configurations (the `ListVirtualTagConfigurations` operationId) request.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	ListVirtualTagConfigurationsWithResponse(ctx context.Context, params *ListVirtualTagConfigurationsParams, reqEditors ...RequestEditorFn) (*ListVirtualTagConfigurationsResponse, error)
+
+	// CreateVirtualTagConfigurationWithBodyWithResponse performs a POST /api/v1/tenant/virtual-tag-configurations (the `CreateVirtualTagConfiguration` operationId) request,
+	// with any type of body and a specified content type.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	CreateVirtualTagConfigurationWithBodyWithResponse(ctx context.Context, params *CreateVirtualTagConfigurationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateVirtualTagConfigurationResponse, error)
+
+	// CreateVirtualTagConfigurationWithResponse performs a POST /api/v1/tenant/virtual-tag-configurations (the `CreateVirtualTagConfiguration` operationId) request.
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	CreateVirtualTagConfigurationWithResponse(ctx context.Context, params *CreateVirtualTagConfigurationParams, body CreateVirtualTagConfigurationJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateVirtualTagConfigurationResponse, error)
+
+	// LookupVirtualTagConfigurationWithResponse performs a GET /api/v1/tenant/virtual-tag-configurations/lookup (the `LookupVirtualTagConfiguration` operationId) request.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	LookupVirtualTagConfigurationWithResponse(ctx context.Context, params *LookupVirtualTagConfigurationParams, reqEditors ...RequestEditorFn) (*LookupVirtualTagConfigurationResponse, error)
+
+	// DeleteVirtualTagConfigurationWithResponse performs a DELETE /api/v1/tenant/virtual-tag-configurations/{id} (the `DeleteVirtualTagConfiguration` operationId) request.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	DeleteVirtualTagConfigurationWithResponse(ctx context.Context, id string, params *DeleteVirtualTagConfigurationParams, reqEditors ...RequestEditorFn) (*DeleteVirtualTagConfigurationResponse, error)
+
+	// GetVirtualTagConfigurationWithResponse performs a GET /api/v1/tenant/virtual-tag-configurations/{id} (the `GetVirtualTagConfiguration` operationId) request.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	GetVirtualTagConfigurationWithResponse(ctx context.Context, id string, params *GetVirtualTagConfigurationParams, reqEditors ...RequestEditorFn) (*GetVirtualTagConfigurationResponse, error)
+
+	// UpdateVirtualTagConfigurationWithBodyWithResponse performs a PUT /api/v1/tenant/virtual-tag-configurations/{id} (the `UpdateVirtualTagConfiguration` operationId) request,
+	// with any type of body and a specified content type.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	UpdateVirtualTagConfigurationWithBodyWithResponse(ctx context.Context, id string, params *UpdateVirtualTagConfigurationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateVirtualTagConfigurationResponse, error)
+
+	// UpdateVirtualTagConfigurationWithResponse performs a PUT /api/v1/tenant/virtual-tag-configurations/{id} (the `UpdateVirtualTagConfiguration` operationId) request.
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	UpdateVirtualTagConfigurationWithResponse(ctx context.Context, id string, params *UpdateVirtualTagConfigurationParams, body UpdateVirtualTagConfigurationJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateVirtualTagConfigurationResponse, error)
 }
 
 type ListIntegrationConnectionsResponse struct {
@@ -3525,6 +4169,294 @@ func (r UpdateOrganizationTenantResponse) ContentType() string {
 	return ""
 }
 
+type ListVirtualTagConfigurationsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *VirtualTagPageResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r ListVirtualTagConfigurationsResponse) GetJSON200() *VirtualTagPageResponse {
+	return r.JSON200
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r ListVirtualTagConfigurationsResponse) GetJSONDefault() *ErrorResponse {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r ListVirtualTagConfigurationsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ListVirtualTagConfigurationsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListVirtualTagConfigurationsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListVirtualTagConfigurationsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CreateVirtualTagConfigurationResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON201 the response for an HTTP 201 `application/json` response
+	JSON201 *VirtualTagResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *ErrorResponse
+}
+
+// GetJSON201 returns the response for an HTTP 201 `application/json` response
+func (r CreateVirtualTagConfigurationResponse) GetJSON201() *VirtualTagResponse {
+	return r.JSON201
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r CreateVirtualTagConfigurationResponse) GetJSONDefault() *ErrorResponse {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r CreateVirtualTagConfigurationResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateVirtualTagConfigurationResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateVirtualTagConfigurationResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CreateVirtualTagConfigurationResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type LookupVirtualTagConfigurationResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *VirtualTagResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r LookupVirtualTagConfigurationResponse) GetJSON200() *VirtualTagResponse {
+	return r.JSON200
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r LookupVirtualTagConfigurationResponse) GetJSONDefault() *ErrorResponse {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r LookupVirtualTagConfigurationResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r LookupVirtualTagConfigurationResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r LookupVirtualTagConfigurationResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r LookupVirtualTagConfigurationResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type DeleteVirtualTagConfigurationResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *SuccessResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r DeleteVirtualTagConfigurationResponse) GetJSON200() *SuccessResponse {
+	return r.JSON200
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r DeleteVirtualTagConfigurationResponse) GetJSONDefault() *ErrorResponse {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r DeleteVirtualTagConfigurationResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteVirtualTagConfigurationResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteVirtualTagConfigurationResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DeleteVirtualTagConfigurationResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetVirtualTagConfigurationResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *VirtualTagResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetVirtualTagConfigurationResponse) GetJSON200() *VirtualTagResponse {
+	return r.JSON200
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r GetVirtualTagConfigurationResponse) GetJSONDefault() *ErrorResponse {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r GetVirtualTagConfigurationResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetVirtualTagConfigurationResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetVirtualTagConfigurationResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetVirtualTagConfigurationResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type UpdateVirtualTagConfigurationResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *VirtualTagResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r UpdateVirtualTagConfigurationResponse) GetJSON200() *VirtualTagResponse {
+	return r.JSON200
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r UpdateVirtualTagConfigurationResponse) GetJSONDefault() *ErrorResponse {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r UpdateVirtualTagConfigurationResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateVirtualTagConfigurationResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateVirtualTagConfigurationResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r UpdateVirtualTagConfigurationResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 // ListIntegrationConnectionsWithResponse performs a GET /api/v1/integrations (the `ListIntegrationConnections` operationId) request.
 //
 // Returns a wrapper object for the known response body format(s).
@@ -3919,6 +4851,94 @@ func (c *ClientWithResponses) UpdateOrganizationTenantWithResponse(ctx context.C
 		return nil, err
 	}
 	return ParseUpdateOrganizationTenantResponse(rsp)
+}
+
+// ListVirtualTagConfigurationsWithResponse performs a GET /api/v1/tenant/virtual-tag-configurations (the `ListVirtualTagConfigurations` operationId) request.
+//
+// Returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) ListVirtualTagConfigurationsWithResponse(ctx context.Context, params *ListVirtualTagConfigurationsParams, reqEditors ...RequestEditorFn) (*ListVirtualTagConfigurationsResponse, error) {
+	rsp, err := c.ListVirtualTagConfigurations(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListVirtualTagConfigurationsResponse(rsp)
+}
+
+// CreateVirtualTagConfigurationWithBodyWithResponse performs a POST /api/v1/tenant/virtual-tag-configurations (the `CreateVirtualTagConfiguration` operationId) request,
+// with any type of body and a specified content type.
+//
+// Returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) CreateVirtualTagConfigurationWithBodyWithResponse(ctx context.Context, params *CreateVirtualTagConfigurationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateVirtualTagConfigurationResponse, error) {
+	rsp, err := c.CreateVirtualTagConfigurationWithBody(ctx, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateVirtualTagConfigurationResponse(rsp)
+}
+
+// CreateVirtualTagConfigurationWithResponse performs a POST /api/v1/tenant/virtual-tag-configurations (the `CreateVirtualTagConfiguration` operationId) request.
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) CreateVirtualTagConfigurationWithResponse(ctx context.Context, params *CreateVirtualTagConfigurationParams, body CreateVirtualTagConfigurationJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateVirtualTagConfigurationResponse, error) {
+	rsp, err := c.CreateVirtualTagConfiguration(ctx, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateVirtualTagConfigurationResponse(rsp)
+}
+
+// LookupVirtualTagConfigurationWithResponse performs a GET /api/v1/tenant/virtual-tag-configurations/lookup (the `LookupVirtualTagConfiguration` operationId) request.
+//
+// Returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) LookupVirtualTagConfigurationWithResponse(ctx context.Context, params *LookupVirtualTagConfigurationParams, reqEditors ...RequestEditorFn) (*LookupVirtualTagConfigurationResponse, error) {
+	rsp, err := c.LookupVirtualTagConfiguration(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseLookupVirtualTagConfigurationResponse(rsp)
+}
+
+// DeleteVirtualTagConfigurationWithResponse performs a DELETE /api/v1/tenant/virtual-tag-configurations/{id} (the `DeleteVirtualTagConfiguration` operationId) request.
+//
+// Returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) DeleteVirtualTagConfigurationWithResponse(ctx context.Context, id string, params *DeleteVirtualTagConfigurationParams, reqEditors ...RequestEditorFn) (*DeleteVirtualTagConfigurationResponse, error) {
+	rsp, err := c.DeleteVirtualTagConfiguration(ctx, id, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteVirtualTagConfigurationResponse(rsp)
+}
+
+// GetVirtualTagConfigurationWithResponse performs a GET /api/v1/tenant/virtual-tag-configurations/{id} (the `GetVirtualTagConfiguration` operationId) request.
+//
+// Returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) GetVirtualTagConfigurationWithResponse(ctx context.Context, id string, params *GetVirtualTagConfigurationParams, reqEditors ...RequestEditorFn) (*GetVirtualTagConfigurationResponse, error) {
+	rsp, err := c.GetVirtualTagConfiguration(ctx, id, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetVirtualTagConfigurationResponse(rsp)
+}
+
+// UpdateVirtualTagConfigurationWithBodyWithResponse performs a PUT /api/v1/tenant/virtual-tag-configurations/{id} (the `UpdateVirtualTagConfiguration` operationId) request,
+// with any type of body and a specified content type.
+//
+// Returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) UpdateVirtualTagConfigurationWithBodyWithResponse(ctx context.Context, id string, params *UpdateVirtualTagConfigurationParams, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateVirtualTagConfigurationResponse, error) {
+	rsp, err := c.UpdateVirtualTagConfigurationWithBody(ctx, id, params, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateVirtualTagConfigurationResponse(rsp)
+}
+
+// UpdateVirtualTagConfigurationWithResponse performs a PUT /api/v1/tenant/virtual-tag-configurations/{id} (the `UpdateVirtualTagConfiguration` operationId) request.
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) UpdateVirtualTagConfigurationWithResponse(ctx context.Context, id string, params *UpdateVirtualTagConfigurationParams, body UpdateVirtualTagConfigurationJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateVirtualTagConfigurationResponse, error) {
+	rsp, err := c.UpdateVirtualTagConfiguration(ctx, id, params, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateVirtualTagConfigurationResponse(rsp)
 }
 
 // ParseListIntegrationConnectionsResponse parses an HTTP response from a ListIntegrationConnectionsWithResponse call
@@ -4735,6 +5755,204 @@ func ParseUpdateOrganizationTenantResponse(rsp *http.Response) (*UpdateOrganizat
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest ManagedTenantResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListVirtualTagConfigurationsResponse parses an HTTP response from a ListVirtualTagConfigurationsWithResponse call
+func ParseListVirtualTagConfigurationsResponse(rsp *http.Response) (*ListVirtualTagConfigurationsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListVirtualTagConfigurationsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest VirtualTagPageResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateVirtualTagConfigurationResponse parses an HTTP response from a CreateVirtualTagConfigurationWithResponse call
+func ParseCreateVirtualTagConfigurationResponse(rsp *http.Response) (*CreateVirtualTagConfigurationResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateVirtualTagConfigurationResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest VirtualTagResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseLookupVirtualTagConfigurationResponse parses an HTTP response from a LookupVirtualTagConfigurationWithResponse call
+func ParseLookupVirtualTagConfigurationResponse(rsp *http.Response) (*LookupVirtualTagConfigurationResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &LookupVirtualTagConfigurationResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest VirtualTagResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteVirtualTagConfigurationResponse parses an HTTP response from a DeleteVirtualTagConfigurationWithResponse call
+func ParseDeleteVirtualTagConfigurationResponse(rsp *http.Response) (*DeleteVirtualTagConfigurationResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteVirtualTagConfigurationResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SuccessResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetVirtualTagConfigurationResponse parses an HTTP response from a GetVirtualTagConfigurationWithResponse call
+func ParseGetVirtualTagConfigurationResponse(rsp *http.Response) (*GetVirtualTagConfigurationResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetVirtualTagConfigurationResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest VirtualTagResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateVirtualTagConfigurationResponse parses an HTTP response from a UpdateVirtualTagConfigurationWithResponse call
+func ParseUpdateVirtualTagConfigurationResponse(rsp *http.Response) (*UpdateVirtualTagConfigurationResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateVirtualTagConfigurationResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest VirtualTagResponse
 		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
