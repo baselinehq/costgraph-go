@@ -126,6 +126,54 @@ type AWSConnectionUpdateRequest struct {
 	Region                     *string              `json:"region,omitempty"`
 }
 
+// AzureConnectRequest defines model for AzureConnectRequest.
+type AzureConnectRequest struct {
+	AzureTenantID         string  `json:"azure_tenant_id"`
+	ClientID              string  `json:"client_id"`
+	ClientSecret          *string `json:"client_secret,omitempty"`
+	Container             string  `json:"container"`
+	DisplayName           string  `json:"display_name,omitempty"`
+	EnableRecommendations *bool   `json:"enable_recommendations,omitempty"`
+	ExportName            string  `json:"export_name,omitempty"`
+	SecretVersion         *int64  `json:"secret_version,omitempty"`
+	StorageAccount        string  `json:"storage_account"`
+	TenantID              string  `json:"tenant_id"`
+}
+
+// AzureConnectionSettings defines model for AzureConnectionSettings.
+type AzureConnectionSettings struct {
+	AzureTenantID         string `json:"azure_tenant_id"`
+	ClientID              string `json:"client_id"`
+	ConnectionID          string `json:"connection_id"`
+	Container             string `json:"container"`
+	DisplayName           string `json:"display_name"`
+	EnableRecommendations bool   `json:"enable_recommendations"`
+	ExportName            string `json:"export_name"`
+	ID                    string `json:"id"`
+	SecretVersion         int64  `json:"secret_version"`
+	StorageAccount        string `json:"storage_account"`
+	TenantID              string `json:"tenant_id"`
+}
+
+// AzureConnectionSettingsResponse defines model for AzureConnectionSettingsResponse.
+type AzureConnectionSettingsResponse struct {
+	Data    AzureConnectionSettings `json:"data"`
+	Message string                  `json:"message"`
+	Status  string                  `json:"status"`
+}
+
+// AzureConnectionUpdateRequest defines model for AzureConnectionUpdateRequest.
+type AzureConnectionUpdateRequest struct {
+	AzureTenantID         *string `json:"azure_tenant_id,omitempty"`
+	ClientID              *string `json:"client_id,omitempty"`
+	ClientSecret          *string `json:"client_secret,omitempty"`
+	Container             *string `json:"container,omitempty"`
+	DisplayName           *string `json:"display_name,omitempty"`
+	EnableRecommendations *bool   `json:"enable_recommendations,omitempty"`
+	ExportName            *string `json:"export_name,omitempty"`
+	SecretVersion         *int64  `json:"secret_version,omitempty"`
+}
+
 // CatalogModel defines model for CatalogModel.
 type CatalogModel struct {
 	DisplayName string `json:"display_name"`
@@ -483,6 +531,9 @@ type CreateAIGatewayConnectionJSONRequestBody = AIGatewayConnectRequest
 // ConnectAWSIntegrationJSONRequestBody defines body for ConnectAWSIntegration for application/json ContentType.
 type ConnectAWSIntegrationJSONRequestBody = AWSConnectRequest
 
+// ConnectAzureIntegrationJSONRequestBody defines body for ConnectAzureIntegration for application/json ContentType.
+type ConnectAzureIntegrationJSONRequestBody = AzureConnectRequest
+
 // CreateFocusPushConnectionJSONRequestBody defines body for CreateFocusPushConnection for application/json ContentType.
 type CreateFocusPushConnectionJSONRequestBody = CreatePushConnectionRequest
 
@@ -494,6 +545,9 @@ type UpdateAIGatewayConnectionJSONRequestBody = AIGatewayUpdateRequest
 
 // UpdateAWSIntegrationSettingsJSONRequestBody defines body for UpdateAWSIntegrationSettings for application/json ContentType.
 type UpdateAWSIntegrationSettingsJSONRequestBody = AWSConnectionUpdateRequest
+
+// UpdateAzureIntegrationSettingsJSONRequestBody defines body for UpdateAzureIntegrationSettings for application/json ContentType.
+type UpdateAzureIntegrationSettingsJSONRequestBody = AzureConnectionUpdateRequest
 
 // UpdateGoogleCloudIntegrationSettingsJSONRequestBody defines body for UpdateGoogleCloudIntegrationSettings for application/json ContentType.
 type UpdateGoogleCloudIntegrationSettingsJSONRequestBody = GCPConnectionUpdateRequest
@@ -612,6 +666,14 @@ type ClientInterface interface {
 	// Takes a body of the `application/json` content type.
 	ConnectAWSIntegration(ctx context.Context, body ConnectAWSIntegrationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ConnectAzureIntegrationWithBody performs a POST /api/v1/integrations/azure/connect (the `ConnectAzureIntegration` operationId) request,
+	// with any type of body and a specified content type.
+	ConnectAzureIntegrationWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ConnectAzureIntegration performs a POST /api/v1/integrations/azure/connect (the `ConnectAzureIntegration` operationId) request.
+	// Takes a body of the `application/json` content type.
+	ConnectAzureIntegration(ctx context.Context, body ConnectAzureIntegrationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// CreateFocusPushConnectionWithBody performs a POST /api/v1/integrations/connections (the `CreateFocusPushConnection` operationId) request,
 	// with any type of body and a specified content type.
 	CreateFocusPushConnectionWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -655,6 +717,17 @@ type ClientInterface interface {
 	// UpdateAWSIntegrationSettings performs a PATCH /api/v1/integrations/connections/{id}/aws (the `UpdateAWSIntegrationSettings` operationId) request.
 	// Takes a body of the `application/json` content type.
 	UpdateAWSIntegrationSettings(ctx context.Context, id string, body UpdateAWSIntegrationSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetAzureIntegrationSettings performs a GET /api/v1/integrations/connections/{id}/azure (the `GetAzureIntegrationSettings` operationId) request.
+	GetAzureIntegrationSettings(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateAzureIntegrationSettingsWithBody performs a PATCH /api/v1/integrations/connections/{id}/azure (the `UpdateAzureIntegrationSettings` operationId) request,
+	// with any type of body and a specified content type.
+	UpdateAzureIntegrationSettingsWithBody(ctx context.Context, id string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateAzureIntegrationSettings performs a PATCH /api/v1/integrations/connections/{id}/azure (the `UpdateAzureIntegrationSettings` operationId) request.
+	// Takes a body of the `application/json` content type.
+	UpdateAzureIntegrationSettings(ctx context.Context, id string, body UpdateAzureIntegrationSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetGoogleCloudIntegrationSettings performs a GET /api/v1/integrations/connections/{id}/gcp (the `GetGoogleCloudIntegrationSettings` operationId) request.
 	GetGoogleCloudIntegrationSettings(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -831,6 +904,34 @@ func (c *Client) ConnectAWSIntegration(ctx context.Context, body ConnectAWSInteg
 	return c.Client.Do(req)
 }
 
+// ConnectAzureIntegrationWithBody performs a POST /api/v1/integrations/azure/connect (the `ConnectAzureIntegration` operationId) request,
+// with any type of body and a specified content type.
+func (c *Client) ConnectAzureIntegrationWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectAzureIntegrationRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ConnectAzureIntegration performs a POST /api/v1/integrations/azure/connect (the `ConnectAzureIntegration` operationId) request.
+// Takes a body of the `application/json` content type.
+func (c *Client) ConnectAzureIntegration(ctx context.Context, body ConnectAzureIntegrationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectAzureIntegrationRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 // CreateFocusPushConnectionWithBody performs a POST /api/v1/integrations/connections (the `CreateFocusPushConnection` operationId) request,
 // with any type of body and a specified content type.
 func (c *Client) CreateFocusPushConnectionWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -985,6 +1086,47 @@ func (c *Client) UpdateAWSIntegrationSettingsWithBody(ctx context.Context, id st
 // Takes a body of the `application/json` content type.
 func (c *Client) UpdateAWSIntegrationSettings(ctx context.Context, id string, body UpdateAWSIntegrationSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewUpdateAWSIntegrationSettingsRequest(c.Server, id, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// GetAzureIntegrationSettings performs a GET /api/v1/integrations/connections/{id}/azure (the `GetAzureIntegrationSettings` operationId) request.
+func (c *Client) GetAzureIntegrationSettings(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAzureIntegrationSettingsRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// UpdateAzureIntegrationSettingsWithBody performs a PATCH /api/v1/integrations/connections/{id}/azure (the `UpdateAzureIntegrationSettings` operationId) request,
+// with any type of body and a specified content type.
+func (c *Client) UpdateAzureIntegrationSettingsWithBody(ctx context.Context, id string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateAzureIntegrationSettingsRequestWithBody(c.Server, id, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// UpdateAzureIntegrationSettings performs a PATCH /api/v1/integrations/connections/{id}/azure (the `UpdateAzureIntegrationSettings` operationId) request.
+// Takes a body of the `application/json` content type.
+func (c *Client) UpdateAzureIntegrationSettings(ctx context.Context, id string, body UpdateAzureIntegrationSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateAzureIntegrationSettingsRequest(c.Server, id, body)
 	if err != nil {
 		return nil, err
 	}
@@ -1508,6 +1650,46 @@ func NewConnectAWSIntegrationRequestWithBody(server string, contentType string, 
 	return req, nil
 }
 
+// NewConnectAzureIntegrationRequest calls the generic ConnectAzureIntegration builder with application/json body
+func NewConnectAzureIntegrationRequest(server string, body ConnectAzureIntegrationJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewConnectAzureIntegrationRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewConnectAzureIntegrationRequestWithBody constructs an http.Request for the ConnectAzureIntegration method, with any body, and a specified content type
+func NewConnectAzureIntegrationRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/api/v1/integrations/azure/connect"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewCreateFocusPushConnectionRequest calls the generic CreateFocusPushConnection builder with application/json body
 func NewCreateFocusPushConnectionRequest(server string, body CreateFocusPushConnectionJSONRequestBody) (*http.Request, error) {
 	var bodyReader io.Reader
@@ -1806,6 +1988,87 @@ func NewUpdateAWSIntegrationSettingsRequestWithBody(server string, id string, co
 	}
 
 	operationPath := "/api/v1/integrations/connections/" + pathParam0 + "/aws"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPatch, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetAzureIntegrationSettingsRequest constructs an http.Request for the GetAzureIntegrationSettings method
+func NewGetAzureIntegrationSettingsRequest(server string, id string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/api/v1/integrations/connections/" + pathParam0 + "/azure"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateAzureIntegrationSettingsRequest calls the generic UpdateAzureIntegrationSettings builder with application/json body
+func NewUpdateAzureIntegrationSettingsRequest(server string, id string, body UpdateAzureIntegrationSettingsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateAzureIntegrationSettingsRequestWithBody(server, id, "application/json", bodyReader)
+}
+
+// NewUpdateAzureIntegrationSettingsRequestWithBody constructs an http.Request for the UpdateAzureIntegrationSettings method, with any body, and a specified content type
+func NewUpdateAzureIntegrationSettingsRequestWithBody(server string, id string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/api/v1/integrations/connections/" + pathParam0 + "/azure"
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -2778,6 +3041,16 @@ type ClientWithResponsesInterface interface {
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	ConnectAWSIntegrationWithResponse(ctx context.Context, body ConnectAWSIntegrationJSONRequestBody, reqEditors ...RequestEditorFn) (*ConnectAWSIntegrationResponse, error)
 
+	// ConnectAzureIntegrationWithBodyWithResponse performs a POST /api/v1/integrations/azure/connect (the `ConnectAzureIntegration` operationId) request,
+	// with any type of body and a specified content type.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	ConnectAzureIntegrationWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ConnectAzureIntegrationResponse, error)
+
+	// ConnectAzureIntegrationWithResponse performs a POST /api/v1/integrations/azure/connect (the `ConnectAzureIntegration` operationId) request.
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	ConnectAzureIntegrationWithResponse(ctx context.Context, body ConnectAzureIntegrationJSONRequestBody, reqEditors ...RequestEditorFn) (*ConnectAzureIntegrationResponse, error)
+
 	// CreateFocusPushConnectionWithBodyWithResponse performs a POST /api/v1/integrations/connections (the `CreateFocusPushConnection` operationId) request,
 	// with any type of body and a specified content type.
 	//
@@ -2837,6 +3110,21 @@ type ClientWithResponsesInterface interface {
 	// UpdateAWSIntegrationSettingsWithResponse performs a PATCH /api/v1/integrations/connections/{id}/aws (the `UpdateAWSIntegrationSettings` operationId) request.
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	UpdateAWSIntegrationSettingsWithResponse(ctx context.Context, id string, body UpdateAWSIntegrationSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateAWSIntegrationSettingsResponse, error)
+
+	// GetAzureIntegrationSettingsWithResponse performs a GET /api/v1/integrations/connections/{id}/azure (the `GetAzureIntegrationSettings` operationId) request.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	GetAzureIntegrationSettingsWithResponse(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*GetAzureIntegrationSettingsResponse, error)
+
+	// UpdateAzureIntegrationSettingsWithBodyWithResponse performs a PATCH /api/v1/integrations/connections/{id}/azure (the `UpdateAzureIntegrationSettings` operationId) request,
+	// with any type of body and a specified content type.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	UpdateAzureIntegrationSettingsWithBodyWithResponse(ctx context.Context, id string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateAzureIntegrationSettingsResponse, error)
+
+	// UpdateAzureIntegrationSettingsWithResponse performs a PATCH /api/v1/integrations/connections/{id}/azure (the `UpdateAzureIntegrationSettings` operationId) request.
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	UpdateAzureIntegrationSettingsWithResponse(ctx context.Context, id string, body UpdateAzureIntegrationSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateAzureIntegrationSettingsResponse, error)
 
 	// GetGoogleCloudIntegrationSettingsWithResponse performs a GET /api/v1/integrations/connections/{id}/gcp (the `GetGoogleCloudIntegrationSettings` operationId) request.
 	//
@@ -3155,6 +3443,54 @@ func (r ConnectAWSIntegrationResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r ConnectAWSIntegrationResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ConnectAzureIntegrationResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON201 the response for an HTTP 201 `application/json` response
+	JSON201 *ConnectedIntegrationResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *ErrorResponse
+}
+
+// GetJSON201 returns the response for an HTTP 201 `application/json` response
+func (r ConnectAzureIntegrationResponse) GetJSON201() *ConnectedIntegrationResponse {
+	return r.JSON201
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r ConnectAzureIntegrationResponse) GetJSONDefault() *ErrorResponse {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r ConnectAzureIntegrationResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ConnectAzureIntegrationResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ConnectAzureIntegrationResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ConnectAzureIntegrationResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -3539,6 +3875,102 @@ func (r UpdateAWSIntegrationSettingsResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r UpdateAWSIntegrationSettingsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetAzureIntegrationSettingsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *AzureConnectionSettingsResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetAzureIntegrationSettingsResponse) GetJSON200() *AzureConnectionSettingsResponse {
+	return r.JSON200
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r GetAzureIntegrationSettingsResponse) GetJSONDefault() *ErrorResponse {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r GetAzureIntegrationSettingsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetAzureIntegrationSettingsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAzureIntegrationSettingsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetAzureIntegrationSettingsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type UpdateAzureIntegrationSettingsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *AzureConnectionSettingsResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r UpdateAzureIntegrationSettingsResponse) GetJSON200() *AzureConnectionSettingsResponse {
+	return r.JSON200
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r UpdateAzureIntegrationSettingsResponse) GetJSONDefault() *ErrorResponse {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r UpdateAzureIntegrationSettingsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateAzureIntegrationSettingsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateAzureIntegrationSettingsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r UpdateAzureIntegrationSettingsResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -4523,6 +4955,28 @@ func (c *ClientWithResponses) ConnectAWSIntegrationWithResponse(ctx context.Cont
 	return ParseConnectAWSIntegrationResponse(rsp)
 }
 
+// ConnectAzureIntegrationWithBodyWithResponse performs a POST /api/v1/integrations/azure/connect (the `ConnectAzureIntegration` operationId) request,
+// with any type of body and a specified content type.
+//
+// Returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) ConnectAzureIntegrationWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ConnectAzureIntegrationResponse, error) {
+	rsp, err := c.ConnectAzureIntegrationWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectAzureIntegrationResponse(rsp)
+}
+
+// ConnectAzureIntegrationWithResponse performs a POST /api/v1/integrations/azure/connect (the `ConnectAzureIntegration` operationId) request.
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) ConnectAzureIntegrationWithResponse(ctx context.Context, body ConnectAzureIntegrationJSONRequestBody, reqEditors ...RequestEditorFn) (*ConnectAzureIntegrationResponse, error) {
+	rsp, err := c.ConnectAzureIntegration(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectAzureIntegrationResponse(rsp)
+}
+
 // CreateFocusPushConnectionWithBodyWithResponse performs a POST /api/v1/integrations/connections (the `CreateFocusPushConnection` operationId) request,
 // with any type of body and a specified content type.
 //
@@ -4653,6 +5107,39 @@ func (c *ClientWithResponses) UpdateAWSIntegrationSettingsWithResponse(ctx conte
 		return nil, err
 	}
 	return ParseUpdateAWSIntegrationSettingsResponse(rsp)
+}
+
+// GetAzureIntegrationSettingsWithResponse performs a GET /api/v1/integrations/connections/{id}/azure (the `GetAzureIntegrationSettings` operationId) request.
+//
+// Returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) GetAzureIntegrationSettingsWithResponse(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*GetAzureIntegrationSettingsResponse, error) {
+	rsp, err := c.GetAzureIntegrationSettings(ctx, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAzureIntegrationSettingsResponse(rsp)
+}
+
+// UpdateAzureIntegrationSettingsWithBodyWithResponse performs a PATCH /api/v1/integrations/connections/{id}/azure (the `UpdateAzureIntegrationSettings` operationId) request,
+// with any type of body and a specified content type.
+//
+// Returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) UpdateAzureIntegrationSettingsWithBodyWithResponse(ctx context.Context, id string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateAzureIntegrationSettingsResponse, error) {
+	rsp, err := c.UpdateAzureIntegrationSettingsWithBody(ctx, id, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateAzureIntegrationSettingsResponse(rsp)
+}
+
+// UpdateAzureIntegrationSettingsWithResponse performs a PATCH /api/v1/integrations/connections/{id}/azure (the `UpdateAzureIntegrationSettings` operationId) request.
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) UpdateAzureIntegrationSettingsWithResponse(ctx context.Context, id string, body UpdateAzureIntegrationSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateAzureIntegrationSettingsResponse, error) {
+	rsp, err := c.UpdateAzureIntegrationSettings(ctx, id, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateAzureIntegrationSettingsResponse(rsp)
 }
 
 // GetGoogleCloudIntegrationSettingsWithResponse performs a GET /api/v1/integrations/connections/{id}/gcp (the `GetGoogleCloudIntegrationSettings` operationId) request.
@@ -5073,6 +5560,39 @@ func ParseConnectAWSIntegrationResponse(rsp *http.Response) (*ConnectAWSIntegrat
 	return response, nil
 }
 
+// ParseConnectAzureIntegrationResponse parses an HTTP response from a ConnectAzureIntegrationWithResponse call
+func ParseConnectAzureIntegrationResponse(rsp *http.Response) (*ConnectAzureIntegrationResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ConnectAzureIntegrationResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest ConnectedIntegrationResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseCreateFocusPushConnectionResponse parses an HTTP response from a CreateFocusPushConnectionWithResponse call
 func ParseCreateFocusPushConnectionResponse(rsp *http.Response) (*CreateFocusPushConnectionResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -5326,6 +5846,72 @@ func ParseUpdateAWSIntegrationSettingsResponse(rsp *http.Response) (*UpdateAWSIn
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest AWSConnectionSettingsResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetAzureIntegrationSettingsResponse parses an HTTP response from a GetAzureIntegrationSettingsWithResponse call
+func ParseGetAzureIntegrationSettingsResponse(rsp *http.Response) (*GetAzureIntegrationSettingsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetAzureIntegrationSettingsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AzureConnectionSettingsResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateAzureIntegrationSettingsResponse parses an HTTP response from a UpdateAzureIntegrationSettingsWithResponse call
+func ParseUpdateAzureIntegrationSettingsResponse(rsp *http.Response) (*UpdateAzureIntegrationSettingsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateAzureIntegrationSettingsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AzureConnectionSettingsResponse
 		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}

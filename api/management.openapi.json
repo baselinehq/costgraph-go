@@ -3,7 +3,7 @@
   "info": {
     "title": "CostGraph management API subset",
     "version": "0.2.0",
-    "description": "Reviewed API-key management contract for identity, FOCUS push, tenant administration, AWS role and Google Cloud impersonation connections, and AI gateways. Existing operations preserve their original contract. Expanded lifecycle contracts follow the separately reviewed backend Terraform management change. See api/README.md for provenance and scope."
+    "description": "Reviewed API-key management contract for identity, FOCUS push, tenant administration, AWS role and Google Cloud impersonation connections, and AI gateways. Existing operations preserve their original contract. Expanded lifecycle contracts follow the separately reviewed backend Terraform management change. See api/README.md for provenance and scope. Azure service-principal export management exposes write-only secrets and a persisted rotation counter."
   },
   "security": [
     {
@@ -1305,6 +1305,125 @@
             }
           }
         }
+      }
+    },
+    "/api/v1/integrations/azure/connect": {
+      "post": {
+        "operationId": "ConnectAzureIntegration",
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectedIntegrationResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AzureConnectRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/integrations/connections/{id}/azure": {
+      "get": {
+        "operationId": "GetAzureIntegrationSettings",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AzureConnectionSettingsResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "UpdateAzureIntegrationSettings",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AzureConnectionSettingsResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AzureConnectionUpdateRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
       }
     }
   },
@@ -2633,6 +2752,168 @@
         },
         "required": [
           "status",
+          "data"
+        ]
+      },
+      "AzureConnectRequest": {
+        "type": "object",
+        "properties": {
+          "tenant_id": {
+            "type": "string",
+            "x-go-name": "TenantID"
+          },
+          "azure_tenant_id": {
+            "type": "string",
+            "x-go-name": "AzureTenantID"
+          },
+          "client_id": {
+            "type": "string",
+            "x-go-name": "ClientID"
+          },
+          "client_secret": {
+            "type": "string",
+            "writeOnly": true
+          },
+          "secret_version": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "storage_account": {
+            "type": "string"
+          },
+          "container": {
+            "type": "string"
+          },
+          "export_name": {
+            "type": "string",
+            "x-go-type-skip-optional-pointer": true
+          },
+          "display_name": {
+            "type": "string",
+            "x-go-type-skip-optional-pointer": true
+          },
+          "enable_recommendations": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "tenant_id",
+          "azure_tenant_id",
+          "client_id",
+          "client_secret",
+          "storage_account",
+          "container"
+        ]
+      },
+      "AzureConnectionSettings": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "x-go-name": "ID"
+          },
+          "connection_id": {
+            "type": "string",
+            "x-go-name": "ConnectionID"
+          },
+          "tenant_id": {
+            "type": "string",
+            "x-go-name": "TenantID"
+          },
+          "azure_tenant_id": {
+            "type": "string",
+            "x-go-name": "AzureTenantID"
+          },
+          "client_id": {
+            "type": "string",
+            "x-go-name": "ClientID"
+          },
+          "secret_version": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "storage_account": {
+            "type": "string"
+          },
+          "container": {
+            "type": "string"
+          },
+          "export_name": {
+            "type": "string"
+          },
+          "display_name": {
+            "type": "string"
+          },
+          "enable_recommendations": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "connection_id",
+          "tenant_id",
+          "azure_tenant_id",
+          "client_id",
+          "secret_version",
+          "storage_account",
+          "container",
+          "export_name",
+          "display_name",
+          "enable_recommendations"
+        ]
+      },
+      "AzureConnectionUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "azure_tenant_id": {
+            "type": "string",
+            "x-go-name": "AzureTenantID"
+          },
+          "client_id": {
+            "type": "string",
+            "x-go-name": "ClientID"
+          },
+          "client_secret": {
+            "type": "string",
+            "writeOnly": true
+          },
+          "secret_version": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "container": {
+            "type": "string"
+          },
+          "export_name": {
+            "type": "string"
+          },
+          "display_name": {
+            "type": "string"
+          },
+          "enable_recommendations": {
+            "type": "boolean"
+          }
+        }
+      },
+      "AzureConnectionSettingsResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/AzureConnectionSettings"
+          }
+        },
+        "required": [
+          "status",
+          "message",
           "data"
         ]
       }

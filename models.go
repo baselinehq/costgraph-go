@@ -65,3 +65,9 @@ type VirtualTagRule = api.VirtualTagRule
 type VirtualTagRuleInput = api.VirtualTagRuleInput
 
 type VirtualTagRequest = api.VirtualTagRequest
+
+type AzureConnectRequest = api.AzureConnectRequest
+
+type AzureConnectionSettings = api.AzureConnectionSettings
+
+type AzureConnectionUpdateRequest = api.AzureConnectionUpdateRequest
