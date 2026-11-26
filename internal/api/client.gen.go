@@ -126,6 +126,20 @@ type AWSConnectionUpdateRequest struct {
 	Region                     *string              `json:"region,omitempty"`
 }
 
+// CatalogModel defines model for CatalogModel.
+type CatalogModel struct {
+	DisplayName string `json:"display_name"`
+	Key         string `json:"key"`
+	Publisher   string `json:"publisher"`
+}
+
+// CatalogModelListResponse defines model for CatalogModelListResponse.
+type CatalogModelListResponse struct {
+	Data    []CatalogModel `json:"data"`
+	Message string         `json:"message"`
+	Status  string         `json:"status"`
+}
+
 // ConnectedIntegration defines model for ConnectedIntegration.
 type ConnectedIntegration struct {
 	AutomationEnabled *bool  `json:"automation_enabled,omitempty"`
@@ -334,6 +348,11 @@ type UpdateTenantRequest struct {
 	Name string `json:"name"`
 }
 
+// SearchAIGatewayModelsParams defines parameters for SearchAIGatewayModels.
+type SearchAIGatewayModelsParams struct {
+	Q *string `form:"q,omitempty" json:"q,omitempty"`
+}
+
 // CreateAIGatewayConnectionJSONRequestBody defines body for CreateAIGatewayConnection for application/json ContentType.
 type CreateAIGatewayConnectionJSONRequestBody = AIGatewayConnectRequest
 
@@ -448,6 +467,9 @@ type ClientInterface interface {
 	// CreateAIGatewayConnection performs a POST /api/v1/integrations/ai-gateway/connect (the `CreateAIGatewayConnection` operationId) request.
 	// Takes a body of the `application/json` content type.
 	CreateAIGatewayConnection(ctx context.Context, body CreateAIGatewayConnectionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SearchAIGatewayModels performs a GET /api/v1/integrations/ai-gateway/models (the `SearchAIGatewayModels` operationId) request.
+	SearchAIGatewayModels(ctx context.Context, params *SearchAIGatewayModelsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// ConnectAWSIntegrationWithBody performs a POST /api/v1/integrations/aws/connect (the `ConnectAWSIntegration` operationId) request,
 	// with any type of body and a specified content type.
@@ -583,6 +605,19 @@ func (c *Client) CreateAIGatewayConnectionWithBody(ctx context.Context, contentT
 // Takes a body of the `application/json` content type.
 func (c *Client) CreateAIGatewayConnection(ctx context.Context, body CreateAIGatewayConnectionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewCreateAIGatewayConnectionRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// SearchAIGatewayModels performs a GET /api/v1/integrations/ai-gateway/models (the `SearchAIGatewayModels` operationId) request.
+func (c *Client) SearchAIGatewayModels(ctx context.Context, params *SearchAIGatewayModelsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSearchAIGatewayModelsRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -1038,6 +1073,60 @@ func NewCreateAIGatewayConnectionRequestWithBody(server string, contentType stri
 	}
 
 	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewSearchAIGatewayModelsRequest constructs an http.Request for the SearchAIGatewayModels method
+func NewSearchAIGatewayModelsRequest(server string, params *SearchAIGatewayModelsParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/api/v1/integrations/ai-gateway/models"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Q != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "q", *params.Q, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	return req, nil
 }
@@ -1850,6 +1939,11 @@ type ClientWithResponsesInterface interface {
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	CreateAIGatewayConnectionWithResponse(ctx context.Context, body CreateAIGatewayConnectionJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateAIGatewayConnectionResponse, error)
 
+	// SearchAIGatewayModelsWithResponse performs a GET /api/v1/integrations/ai-gateway/models (the `SearchAIGatewayModels` operationId) request.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	SearchAIGatewayModelsWithResponse(ctx context.Context, params *SearchAIGatewayModelsParams, reqEditors ...RequestEditorFn) (*SearchAIGatewayModelsResponse, error)
+
 	// ConnectAWSIntegrationWithBodyWithResponse performs a POST /api/v1/integrations/aws/connect (the `ConnectAWSIntegration` operationId) request,
 	// with any type of body and a specified content type.
 	//
@@ -2081,6 +2175,54 @@ func (r CreateAIGatewayConnectionResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r CreateAIGatewayConnectionResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type SearchAIGatewayModelsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *CatalogModelListResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r SearchAIGatewayModelsResponse) GetJSON200() *CatalogModelListResponse {
+	return r.JSON200
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r SearchAIGatewayModelsResponse) GetJSONDefault() *ErrorResponse {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r SearchAIGatewayModelsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r SearchAIGatewayModelsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SearchAIGatewayModelsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r SearchAIGatewayModelsResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -3032,6 +3174,17 @@ func (c *ClientWithResponses) CreateAIGatewayConnectionWithResponse(ctx context.
 	return ParseCreateAIGatewayConnectionResponse(rsp)
 }
 
+// SearchAIGatewayModelsWithResponse performs a GET /api/v1/integrations/ai-gateway/models (the `SearchAIGatewayModels` operationId) request.
+//
+// Returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) SearchAIGatewayModelsWithResponse(ctx context.Context, params *SearchAIGatewayModelsParams, reqEditors ...RequestEditorFn) (*SearchAIGatewayModelsResponse, error) {
+	rsp, err := c.SearchAIGatewayModels(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSearchAIGatewayModelsResponse(rsp)
+}
+
 // ConnectAWSIntegrationWithBodyWithResponse performs a POST /api/v1/integrations/aws/connect (the `ConnectAWSIntegration` operationId) request,
 // with any type of body and a specified content type.
 //
@@ -3393,6 +3546,39 @@ func ParseCreateAIGatewayConnectionResponse(rsp *http.Response) (*CreateAIGatewa
 			return nil, err
 		}
 		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSearchAIGatewayModelsResponse parses an HTTP response from a SearchAIGatewayModelsWithResponse call
+func ParseSearchAIGatewayModelsResponse(rsp *http.Response) (*SearchAIGatewayModelsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SearchAIGatewayModelsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest CatalogModelListResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest ErrorResponse

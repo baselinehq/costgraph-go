@@ -835,6 +835,43 @@
           }
         ]
       }
+    },
+    "/api/v1/integrations/ai-gateway/models": {
+      "get": {
+        "operationId": "SearchAIGatewayModels",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Up to twenty catalog models matching a key, display name, or alias.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CatalogModelListResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1841,6 +1878,47 @@
             "type": "string"
           }
         }
+      },
+      "CatalogModel": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "display_name": {
+            "type": "string"
+          },
+          "publisher": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "display_name",
+          "publisher"
+        ]
+      },
+      "CatalogModelListResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CatalogModel"
+            }
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
       }
     }
   }

@@ -49,3 +49,5 @@ type AIGatewayConnectRequest = api.AIGatewayConnectRequest
 type AIGatewaySettings = api.AIGatewaySettings
 
 type AIGatewayUpdateRequest = api.AIGatewayUpdateRequest
+
+type CatalogModel = api.CatalogModel

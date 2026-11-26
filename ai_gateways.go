@@ -48,3 +48,15 @@ func (c *Client) UpdateAIGatewayConnection(ctx context.Context, id string, reque
 	}
 	return &result.Data, nil
 }
+
+func (c *Client) SearchCatalogModels(ctx context.Context, query string) ([]CatalogModel, error) {
+	response, err := c.api.SearchAIGatewayModels(ctx, &api.SearchAIGatewayModelsParams{Q: &query})
+	result, err := decode[api.CatalogModelListResponse]("search catalog models", response, err)
+	if err != nil {
+		return nil, err
+	}
+	if result.Data == nil {
+		return nil, errors.New("search catalog models: missing model list in CostGraph API response")
+	}
+	return result.Data, nil
+}

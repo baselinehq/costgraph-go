@@ -75,6 +75,8 @@ Update request fields are pointers. A nil field preserves its value; a non-nil p
 
 Gateway update maps are pointers so omission preserves the saved map. Point to an empty map to clear it. Empty cluster or instance strings detach that scope, and a zero scrape port clears the override. Nullable scrape values returned by the API mean the gateway registry defaults apply. Advanced attribution rules and custom metric bindings are outside this SDK slice and are preserved by its updates.
 
+`SearchCatalogModels(ctx, query)` returns up to twenty models whose keys, display names, or aliases match the query. Use the returned `Key` as a model-map target. A matching alias is a search term rather than the canonical key persisted by CostGraph.
+
 ## Handle API errors
 
 HTTP failures return `*costgraph.APIError`, with `StatusCode` and `Operation`. Its string contains only a safe operation name and HTTP status. It does not include arbitrary server messages, response bodies, credentials, or request URLs. Inspect the status with `errors.As`. A 404 establishes absence; authentication, permission, network, and server failures do not.
