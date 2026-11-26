@@ -3,7 +3,7 @@
   "info": {
     "title": "CostGraph management API subset",
     "version": "0.2.0",
-    "description": "Reviewed API-key management contract for identity, FOCUS push, tenant administration, AWS role and Google Cloud impersonation connections, and AI gateways. Existing operations preserve their original contract. Expanded lifecycle contracts follow the separately reviewed backend Terraform management change. See api/README.md for provenance and scope."
+    "description": "Reviewed API-key management contract for identity, FOCUS push, tenant administration, AWS role and Google Cloud impersonation connections, and AI gateways. Existing operations preserve their original contract. Expanded lifecycle contracts follow the separately reviewed backend Terraform management change. See api/README.md for provenance and scope. Azure service-principal export management exposes write-only secrets and a persisted rotation counter."
   },
   "security": [
     {
@@ -871,6 +871,559 @@
             }
           }
         }
+      }
+    },
+    "/api/v1/organizations/{org_id}/kubernetes-clusters": {
+      "post": {
+        "operationId": "CreateKubernetesCluster",
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KubernetesClusterResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateKubernetesClusterRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/organizations/{org_id}/kubernetes-clusters/{id}": {
+      "get": {
+        "operationId": "GetKubernetesCluster",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KubernetesClusterResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "DeleteKubernetesCluster",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/tenant/virtual-tag-configurations": {
+      "get": {
+        "operationId": "ListVirtualTagConfigurations",
+        "parameters": [
+          {
+            "name": "X-CostGraph-Tenant-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "TenantID"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VirtualTagPageResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "CreateVirtualTagConfiguration",
+        "parameters": [
+          {
+            "name": "X-CostGraph-Tenant-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "TenantID"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VirtualTagResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VirtualTagRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tenant/virtual-tag-configurations/lookup": {
+      "get": {
+        "operationId": "LookupVirtualTagConfiguration",
+        "parameters": [
+          {
+            "name": "X-CostGraph-Tenant-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "TenantID"
+          },
+          {
+            "name": "key",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VirtualTagResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tenant/virtual-tag-configurations/{id}": {
+      "get": {
+        "operationId": "GetVirtualTagConfiguration",
+        "parameters": [
+          {
+            "name": "X-CostGraph-Tenant-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "TenantID"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VirtualTagResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "UpdateVirtualTagConfiguration",
+        "parameters": [
+          {
+            "name": "X-CostGraph-Tenant-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "TenantID"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VirtualTagResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VirtualTagRequest"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "DeleteVirtualTagConfiguration",
+        "parameters": [
+          {
+            "name": "X-CostGraph-Tenant-ID",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "TenantID"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-go-name": "Revision"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/integrations/azure/connect": {
+      "post": {
+        "operationId": "ConnectAzureIntegration",
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectedIntegrationResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AzureConnectRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/integrations/connections/{id}/azure": {
+      "get": {
+        "operationId": "GetAzureIntegrationSettings",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AzureConnectionSettingsResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "UpdateAzureIntegrationSettings",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AzureConnectionSettingsResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AzureConnectionUpdateRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
       }
     }
   },
@@ -1912,6 +2465,450 @@
             "items": {
               "$ref": "#/components/schemas/CatalogModel"
             }
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "KubernetesCluster": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "x-go-name": "ID"
+          },
+          "name": {
+            "type": "string"
+          },
+          "tenant_id": {
+            "type": "string",
+            "x-go-name": "TenantID"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "tenant_id"
+        ]
+      },
+      "KubernetesClusterResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/KubernetesCluster"
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "CreateKubernetesClusterRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "tenant_id": {
+            "type": "string",
+            "x-go-name": "TenantID"
+          }
+        },
+        "required": [
+          "name",
+          "tenant_id"
+        ]
+      },
+      "VirtualTagMetadata": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "x-go-name": "ID"
+          },
+          "tenant_id": {
+            "type": "string",
+            "x-go-name": "TenantID"
+          },
+          "key": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "revision": {
+            "type": "string"
+          },
+          "rules_revision": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "rule_count": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "tenant_id",
+          "key",
+          "description",
+          "revision",
+          "rules_revision",
+          "rule_count"
+        ]
+      },
+      "VirtualTagRule": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "x-go-name": "ID"
+          },
+          "rule_key": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "expression": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string",
+            "nullable": true
+          },
+          "inherited_from": {
+            "type": "string",
+            "nullable": true
+          },
+          "active": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "rule_key",
+          "scope",
+          "expression",
+          "value",
+          "inherited_from",
+          "active"
+        ]
+      },
+      "VirtualTag": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "x-go-name": "ID"
+          },
+          "tenant_id": {
+            "type": "string",
+            "x-go-name": "TenantID"
+          },
+          "key": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "revision": {
+            "type": "string"
+          },
+          "rules_revision": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "rule_count": {
+            "type": "integer"
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VirtualTagRule"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "tenant_id",
+          "key",
+          "description",
+          "revision",
+          "rules_revision",
+          "rule_count",
+          "rules"
+        ]
+      },
+      "VirtualTagRuleInput": {
+        "type": "object",
+        "properties": {
+          "rule_key": {
+            "type": "string"
+          },
+          "scope": {
+            "type": "string"
+          },
+          "expression": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string",
+            "nullable": true
+          },
+          "inherited_from": {
+            "type": "string",
+            "nullable": true
+          },
+          "active": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "rule_key",
+          "scope",
+          "expression"
+        ]
+      },
+      "VirtualTagRequest": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "expected_revision": {
+            "type": "string"
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VirtualTagRuleInput"
+            }
+          }
+        },
+        "required": [
+          "key",
+          "description",
+          "rules"
+        ]
+      },
+      "VirtualTagPage": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VirtualTagMetadata"
+            }
+          },
+          "next_cursor": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "items",
+          "next_cursor"
+        ]
+      },
+      "VirtualTagResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/VirtualTag"
+          }
+        },
+        "required": [
+          "status",
+          "data"
+        ]
+      },
+      "VirtualTagPageResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/VirtualTagPage"
+          }
+        },
+        "required": [
+          "status",
+          "data"
+        ]
+      },
+      "AzureConnectRequest": {
+        "type": "object",
+        "properties": {
+          "tenant_id": {
+            "type": "string",
+            "x-go-name": "TenantID"
+          },
+          "azure_tenant_id": {
+            "type": "string",
+            "x-go-name": "AzureTenantID"
+          },
+          "client_id": {
+            "type": "string",
+            "x-go-name": "ClientID"
+          },
+          "client_secret": {
+            "type": "string",
+            "writeOnly": true
+          },
+          "secret_version": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "storage_account": {
+            "type": "string"
+          },
+          "container": {
+            "type": "string"
+          },
+          "export_name": {
+            "type": "string",
+            "x-go-type-skip-optional-pointer": true
+          },
+          "display_name": {
+            "type": "string",
+            "x-go-type-skip-optional-pointer": true
+          },
+          "enable_recommendations": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "tenant_id",
+          "azure_tenant_id",
+          "client_id",
+          "client_secret",
+          "storage_account",
+          "container"
+        ]
+      },
+      "AzureConnectionSettings": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "x-go-name": "ID"
+          },
+          "connection_id": {
+            "type": "string",
+            "x-go-name": "ConnectionID"
+          },
+          "tenant_id": {
+            "type": "string",
+            "x-go-name": "TenantID"
+          },
+          "azure_tenant_id": {
+            "type": "string",
+            "x-go-name": "AzureTenantID"
+          },
+          "client_id": {
+            "type": "string",
+            "x-go-name": "ClientID"
+          },
+          "secret_version": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0
+          },
+          "storage_account": {
+            "type": "string"
+          },
+          "container": {
+            "type": "string"
+          },
+          "export_name": {
+            "type": "string"
+          },
+          "display_name": {
+            "type": "string"
+          },
+          "enable_recommendations": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "connection_id",
+          "tenant_id",
+          "azure_tenant_id",
+          "client_id",
+          "secret_version",
+          "storage_account",
+          "container",
+          "export_name",
+          "display_name",
+          "enable_recommendations"
+        ]
+      },
+      "AzureConnectionUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "azure_tenant_id": {
+            "type": "string",
+            "x-go-name": "AzureTenantID"
+          },
+          "client_id": {
+            "type": "string",
+            "x-go-name": "ClientID"
+          },
+          "client_secret": {
+            "type": "string",
+            "writeOnly": true
+          },
+          "secret_version": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "container": {
+            "type": "string"
+          },
+          "export_name": {
+            "type": "string"
+          },
+          "display_name": {
+            "type": "string"
+          },
+          "enable_recommendations": {
+            "type": "boolean"
+          }
+        }
+      },
+      "AzureConnectionSettingsResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/AzureConnectionSettings"
           }
         },
         "required": [

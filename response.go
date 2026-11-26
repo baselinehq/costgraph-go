@@ -12,6 +12,7 @@ const maxResponseSize = 8 << 20
 type APIError struct {
 	StatusCode int
 	Operation  string
+	Code       string
 }
 
 func (e *APIError) Error() string {
@@ -38,7 +39,17 @@ func decode[T any](operation string, response *http.Response, err error) (T, err
 	}
 	defer response.Body.Close()
 	if response.StatusCode < 200 || response.StatusCode >= 300 {
-		return value, &APIError{StatusCode: response.StatusCode, Operation: operation}
+		apiError := &APIError{StatusCode: response.StatusCode, Operation: operation}
+		var body struct {
+			Code string `json:"code"`
+		}
+		if json.NewDecoder(io.LimitReader(response.Body, 4096)).Decode(&body) == nil {
+			switch body.Code {
+			case "not_found", "virtual_tag_exists", "virtual_tag_revision_conflict", "virtual_tag_exported", "virtual_tag_invalid", "virtual_tag_error":
+				apiError.Code = body.Code
+			}
+		}
+		return value, apiError
 	}
 	if response.StatusCode == http.StatusNoContent {
 		return value, nil
