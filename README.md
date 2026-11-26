@@ -96,3 +96,7 @@ make check-generated
 Run `make generate` after an intentional contract change. It uses oapi-codegen v2.9.0. Ordinary builds do not download a live API schema or regenerate files.
 
 Build, vet, and generated-diff checks establish local compilation and reproducibility. Real resource lifecycle verification belongs to the Terraform provider acceptance scenario against an isolated CostGraph backend. Cloud account acceptance requires separately configured AWS and Google Cloud test accounts; it must not be reported as passed from compilation or mocked discovery alone.
+
+## License
+
+This project uses the [MIT License](LICENSE).
