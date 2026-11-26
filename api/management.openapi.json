@@ -1,0 +1,631 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "CostGraph management API subset",
+    "version": "0.1.0",
+    "description": "Reviewed API-key contract for identity, FOCUS billing-provider metadata, and the FOCUS push connection lifecycle. Derived from backend base 923e81f496bb1be4fa5e064afce746d0c19ae755 and the single-connection read change on feat/terraform-integration-contract. This subset intentionally omits unrelated response fields and management APIs. See api/README.md for provenance and review decisions."
+  },
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
+  "paths": {
+    "/api/v1/me": {
+      "get": {
+        "operationId": "CurrentIdentity",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdentityResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/integrations/focus/providers": {
+      "get": {
+        "operationId": "ListFocusProviders",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProviderListResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/integrations": {
+      "get": {
+        "operationId": "ListIntegrationConnections",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionListResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/integrations/connections": {
+      "post": {
+        "operationId": "CreateFocusPushConnection",
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePushConnectionRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/integrations/connections/{id}": {
+      "get": {
+        "operationId": "GetIntegrationConnection",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Internal connection UUID from id, not the fpc_ public connection_id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "RenameIntegrationConnection",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No content"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RenameConnectionRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Internal connection UUID from id, not the fpc_ public connection_id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "DisconnectIntegrationConnection",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No content"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Internal connection UUID from id, not the fpc_ public connection_id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      }
+    },
+    "schemas": {
+      "Tenant": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "x-go-name": "ID"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "Identity": {
+        "type": "object",
+        "properties": {
+          "subject_type": {
+            "type": "string"
+          },
+          "auth_method": {
+            "type": "string"
+          },
+          "permission_scopes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "tenants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tenant"
+            }
+          },
+          "organization_id": {
+            "type": "string",
+            "x-go-name": "OrganizationID"
+          },
+          "organization_name": {
+            "type": "string"
+          },
+          "organization_slug": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "subject_type",
+          "auth_method",
+          "permission_scopes",
+          "tenants"
+        ]
+      },
+      "Connection": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "x-go-name": "ID"
+          },
+          "connection_id": {
+            "type": "string",
+            "x-go-name": "ConnectionID"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "provider_account_id": {
+            "type": "string",
+            "x-go-name": "ProviderAccountID"
+          },
+          "display_name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "ingest_mode": {
+            "type": "string"
+          },
+          "tenant_id": {
+            "type": "string",
+            "x-go-name": "TenantID"
+          },
+          "last_synced_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "last_sync_error": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "connection_id",
+          "provider",
+          "provider_account_id",
+          "display_name",
+          "status",
+          "ingest_mode",
+          "tenant_id",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "ProviderEnvironmentVariable": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "secret": {
+            "type": "boolean"
+          },
+          "alternatives": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "setup_url": {
+            "type": "string",
+            "x-go-name": "SetupURL"
+          }
+        },
+        "required": [
+          "name",
+          "required",
+          "secret"
+        ]
+      },
+      "IntegrationProvider": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "former_name": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "grain": {
+            "type": "string"
+          },
+          "docs_url": {
+            "type": "string",
+            "x-go-name": "DocsURL"
+          },
+          "requires_time_range": {
+            "type": "boolean"
+          },
+          "github_app": {
+            "type": "boolean",
+            "x-go-name": "GitHubApp"
+          },
+          "oauth": {
+            "type": "boolean",
+            "x-go-name": "OAuth"
+          },
+          "env": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProviderEnvironmentVariable"
+            }
+          },
+          "credential_from": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "managed_by": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug",
+          "name",
+          "category",
+          "grain",
+          "docs_url",
+          "requires_time_range",
+          "github_app",
+          "oauth",
+          "env"
+        ]
+      },
+      "CreatePushConnectionRequest": {
+        "type": "object",
+        "properties": {
+          "provider": {
+            "type": "string",
+            "x-go-type-skip-optional-pointer": true
+          },
+          "provider_account_id": {
+            "type": "string",
+            "minLength": 1,
+            "x-go-name": "ProviderAccountID"
+          },
+          "display_name": {
+            "type": "string",
+            "x-go-type-skip-optional-pointer": true
+          },
+          "tenant_id": {
+            "type": "string",
+            "x-go-name": "TenantID",
+            "x-go-type-skip-optional-pointer": true
+          }
+        },
+        "required": [
+          "provider_account_id"
+        ]
+      },
+      "RenameConnectionRequest": {
+        "type": "object",
+        "properties": {
+          "display_name": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "display_name"
+        ]
+      },
+      "SuccessResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "message"
+        ]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "message"
+        ]
+      },
+      "IdentityResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/Identity"
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "ConnectionResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/Connection"
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "ConnectionListResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Connection"
+            }
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "ProviderListResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IntegrationProvider"
+            }
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      }
+    }
+  }
+}
