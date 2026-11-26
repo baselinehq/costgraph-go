@@ -2,8 +2,8 @@
   "openapi": "3.0.3",
   "info": {
     "title": "CostGraph management API subset",
-    "version": "0.1.0",
-    "description": "Reviewed API-key contract for identity, FOCUS billing-provider metadata, and the FOCUS push connection lifecycle. Derived from backend base 923e81f496bb1be4fa5e064afce746d0c19ae755 and the single-connection read change on feat/terraform-integration-contract. This subset intentionally omits unrelated response fields and management APIs. See api/README.md for provenance and review decisions."
+    "version": "0.2.0",
+    "description": "Reviewed API-key management contract for identity, FOCUS push, tenant administration, AWS role and Google Cloud impersonation connections, and AI gateways. Existing operations preserve their original contract. Expanded lifecycle contracts follow the separately reviewed backend Terraform management change. See api/README.md for provenance and scope."
   },
   "security": [
     {
@@ -249,6 +249,586 @@
             "in": "path",
             "required": true,
             "description": "Internal connection UUID from id, not the fpc_ public connection_id.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/organizations/{org_id}/tenants": {
+      "get": {
+        "operationId": "ListOrganizationTenants",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagedTenantListResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "post": {
+        "operationId": "CreateOrganizationTenant",
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagedTenantResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTenantRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/organizations/{org_id}/tenants/{tenant_id}": {
+      "get": {
+        "operationId": "GetOrganizationTenant",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagedTenantResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenant_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "UpdateOrganizationTenant",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagedTenantResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTenantRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenant_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "DeleteOrganizationTenant",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "org_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tenant_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/integrations/aws/connect": {
+      "post": {
+        "operationId": "ConnectAWSIntegration",
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectedIntegrationResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AWSConnectRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/integrations/gcp/connect": {
+      "post": {
+        "operationId": "ConnectGoogleCloudIntegration",
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectedIntegrationResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GCPConnectRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/integrations/connections/{id}/aws": {
+      "get": {
+        "operationId": "GetAWSIntegrationSettings",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AWSConnectionSettingsResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "UpdateAWSIntegrationSettings",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AWSConnectionSettingsResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AWSConnectionUpdateRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/integrations/connections/{id}/gcp": {
+      "get": {
+        "operationId": "GetGoogleCloudIntegrationSettings",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GCPConnectionSettingsResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "UpdateGoogleCloudIntegrationSettings",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GCPConnectionSettingsResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GCPConnectionUpdateRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/integrations/ai-gateway/connect": {
+      "post": {
+        "operationId": "CreateAIGatewayConnection",
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AIGatewayConnectRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/integrations/connections/{id}/ai-gateway": {
+      "get": {
+        "operationId": "GetAIGatewaySettings",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AIGatewaySettingsResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "UpdateAIGatewayConnection",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "API error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AIGatewayUpdateRequest"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "string"
             }
@@ -625,6 +1205,642 @@
           "message",
           "data"
         ]
+      },
+      "ManagedTenant": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "x-go-name": "ID"
+          },
+          "name": {
+            "type": "string"
+          },
+          "organization_id": {
+            "type": "string",
+            "x-go-name": "OrganizationID"
+          },
+          "organization_name": {
+            "type": "string"
+          },
+          "active": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "organization_id",
+          "organization_name",
+          "active"
+        ]
+      },
+      "CreateTenantRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "UpdateTenantRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "ManagedTenantResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ManagedTenant"
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "ManagedTenantListResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ManagedTenant"
+            }
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "AWSAssumeRole": {
+        "type": "object",
+        "properties": {
+          "role_arn": {
+            "type": "string",
+            "x-go-name": "RoleARN"
+          }
+        },
+        "required": [
+          "role_arn"
+        ]
+      },
+      "AWSAssumeRoleSettings": {
+        "type": "object",
+        "properties": {
+          "role_arn": {
+            "type": "string",
+            "x-go-name": "RoleARN"
+          },
+          "external_id": {
+            "type": "string",
+            "x-go-name": "ExternalID"
+          },
+          "automation_role_arn": {
+            "type": "string",
+            "x-go-name": "AutomationRoleARN"
+          },
+          "automation_scopes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "role_arn",
+          "external_id"
+        ]
+      },
+      "GCPImpersonation": {
+        "type": "object",
+        "properties": {
+          "query_project": {
+            "type": "string"
+          },
+          "target_principal": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "query_project",
+          "target_principal"
+        ]
+      },
+      "AWSConnectRequest": {
+        "type": "object",
+        "properties": {
+          "tenant_id": {
+            "type": "string",
+            "x-go-name": "TenantID"
+          },
+          "billing_account_id": {
+            "type": "string",
+            "x-go-name": "BillingAccountID"
+          },
+          "display_name": {
+            "type": "string",
+            "x-go-type-skip-optional-pointer": true
+          },
+          "region": {
+            "type": "string"
+          },
+          "bucket": {
+            "type": "string"
+          },
+          "prefix": {
+            "type": "string",
+            "x-go-type-skip-optional-pointer": true
+          },
+          "assume_role": {
+            "$ref": "#/components/schemas/AWSAssumeRole"
+          },
+          "activate_cost_allocation_tags": {
+            "type": "boolean"
+          },
+          "enable_recommendations": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "tenant_id",
+          "billing_account_id",
+          "region",
+          "bucket",
+          "assume_role"
+        ]
+      },
+      "GCPConnectRequest": {
+        "type": "object",
+        "properties": {
+          "tenant_id": {
+            "type": "string",
+            "x-go-name": "TenantID"
+          },
+          "billing_account_id": {
+            "type": "string",
+            "x-go-name": "BillingAccountID"
+          },
+          "display_name": {
+            "type": "string",
+            "x-go-type-skip-optional-pointer": true
+          },
+          "impersonation": {
+            "$ref": "#/components/schemas/GCPImpersonation"
+          },
+          "enable_recommendations": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "tenant_id",
+          "billing_account_id",
+          "impersonation"
+        ]
+      },
+      "AWSConnectionSettings": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "x-go-name": "ID"
+          },
+          "connection_id": {
+            "type": "string",
+            "x-go-name": "ConnectionID"
+          },
+          "tenant_id": {
+            "type": "string",
+            "x-go-name": "TenantID"
+          },
+          "billing_account_id": {
+            "type": "string",
+            "x-go-name": "BillingAccountID"
+          },
+          "display_name": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "bucket": {
+            "type": "string"
+          },
+          "prefix": {
+            "type": "string"
+          },
+          "assume_role": {
+            "$ref": "#/components/schemas/AWSAssumeRoleSettings"
+          },
+          "activate_cost_allocation_tags": {
+            "type": "boolean"
+          },
+          "enable_recommendations": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "connection_id",
+          "tenant_id",
+          "billing_account_id",
+          "display_name",
+          "kind",
+          "region",
+          "bucket",
+          "prefix",
+          "assume_role",
+          "activate_cost_allocation_tags",
+          "enable_recommendations"
+        ]
+      },
+      "GCPConnectionSettings": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "x-go-name": "ID"
+          },
+          "connection_id": {
+            "type": "string",
+            "x-go-name": "ConnectionID"
+          },
+          "tenant_id": {
+            "type": "string",
+            "x-go-name": "TenantID"
+          },
+          "billing_account_id": {
+            "type": "string",
+            "x-go-name": "BillingAccountID"
+          },
+          "display_name": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "impersonation": {
+            "$ref": "#/components/schemas/GCPImpersonation"
+          },
+          "enable_recommendations": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "connection_id",
+          "tenant_id",
+          "billing_account_id",
+          "display_name",
+          "kind",
+          "impersonation",
+          "enable_recommendations"
+        ]
+      },
+      "AWSConnectionUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "display_name": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "bucket": {
+            "type": "string"
+          },
+          "prefix": {
+            "type": "string"
+          },
+          "assume_role": {
+            "$ref": "#/components/schemas/AWSAssumeRoleUpdate"
+          },
+          "activate_cost_allocation_tags": {
+            "type": "boolean"
+          },
+          "enable_recommendations": {
+            "type": "boolean"
+          }
+        }
+      },
+      "GCPConnectionUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "display_name": {
+            "type": "string"
+          },
+          "impersonation": {
+            "$ref": "#/components/schemas/GCPImpersonationUpdate"
+          },
+          "enable_recommendations": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ConnectedIntegration": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "x-go-name": "ID"
+          },
+          "connection_id": {
+            "type": "string",
+            "x-go-name": "ConnectionID"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "automation_enabled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "connection_id",
+          "provider",
+          "kind"
+        ]
+      },
+      "ConnectedIntegrationResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ConnectedIntegration"
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "AWSConnectionSettingsResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/AWSConnectionSettings"
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "GCPConnectionSettingsResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/GCPConnectionSettings"
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "AIGatewayConnectRequest": {
+        "type": "object",
+        "properties": {
+          "tenant_id": {
+            "type": "string",
+            "x-go-name": "TenantID"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "provider_account_id": {
+            "type": "string",
+            "x-go-name": "ProviderAccountID"
+          },
+          "display_name": {
+            "type": "string",
+            "x-go-type-skip-optional-pointer": true
+          },
+          "model_map": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "x-go-type-skip-optional-pointer": true
+          },
+          "cluster_id": {
+            "type": "string",
+            "x-go-type-skip-optional-pointer": true,
+            "x-go-name": "ClusterID"
+          },
+          "instance_id": {
+            "type": "string",
+            "x-go-type-skip-optional-pointer": true,
+            "x-go-name": "InstanceID"
+          },
+          "ingest_mode": {
+            "type": "string",
+            "x-go-type-skip-optional-pointer": true
+          },
+          "scrape_namespace": {
+            "type": "string",
+            "x-go-type-skip-optional-pointer": true
+          },
+          "scrape_port": {
+            "type": "integer",
+            "x-go-type-skip-optional-pointer": true
+          },
+          "scrape_label_selector": {
+            "type": "string",
+            "x-go-type-skip-optional-pointer": true
+          }
+        },
+        "required": [
+          "tenant_id",
+          "provider",
+          "provider_account_id"
+        ]
+      },
+      "AIGatewayUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "cluster_id": {
+            "type": "string",
+            "x-go-name": "ClusterID"
+          },
+          "instance_id": {
+            "type": "string",
+            "x-go-name": "InstanceID"
+          },
+          "tenant_map": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "scrape_namespace": {
+            "type": "string"
+          },
+          "scrape_port": {
+            "type": "integer"
+          },
+          "scrape_label_selector": {
+            "type": "string"
+          },
+          "model_map": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "AIGatewaySettings": {
+        "type": "object",
+        "properties": {
+          "model_map": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "unmatched_models": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "cluster_id": {
+            "type": "string",
+            "nullable": true,
+            "x-go-name": "ClusterID"
+          },
+          "instance_id": {
+            "type": "string",
+            "nullable": true,
+            "x-go-name": "InstanceID"
+          },
+          "tenant_map": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "scrape_namespace": {
+            "type": "string",
+            "nullable": true
+          },
+          "scrape_port": {
+            "type": "integer",
+            "nullable": true
+          },
+          "scrape_label_selector": {
+            "type": "string",
+            "nullable": true
+          },
+          "ingest_mode": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "model_map",
+          "unmatched_models",
+          "cluster_id",
+          "instance_id",
+          "tenant_map",
+          "scrape_namespace",
+          "scrape_port",
+          "scrape_label_selector",
+          "ingest_mode"
+        ]
+      },
+      "AIGatewaySettingsResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/AIGatewaySettings"
+          }
+        },
+        "required": [
+          "status",
+          "message",
+          "data"
+        ]
+      },
+      "AWSAssumeRoleUpdate": {
+        "type": "object",
+        "properties": {
+          "role_arn": {
+            "type": "string",
+            "x-go-name": "RoleARN"
+          }
+        }
+      },
+      "GCPImpersonationUpdate": {
+        "type": "object",
+        "properties": {
+          "query_project": {
+            "type": "string"
+          },
+          "target_principal": {
+            "type": "string"
+          }
+        }
       }
     }
   }
