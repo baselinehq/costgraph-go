@@ -1,6 +1,6 @@
 # Management API contract
 
-`management.openapi.json` is a reviewed OpenAPI 3.0.3 subset used to generate the internal HTTP client and models. It contains seven operations for the initial FOCUS push connection lifecycle.
+`management.openapi.json` is a reviewed OpenAPI 3.0.3 subset used to generate the internal HTTP client and models. The initial seven operations cover FOCUS push lifecycle and discovery. The expanded subset adds tenant administration, cloud role/impersonation management, and AI gateway settings.
 
 The source baseline is backend commit `923e81f496bb1be4fa5e064afce746d0c19ae755`. The new `GetIntegrationConnection` operation is supplied by the separate `feat/terraform-integration-contract` backend change. Stable operation identifiers for the other integration operations come from that change too. The read contract and stable identifiers are committed in backend `fe88f2994d819e1ebb131b1f723766f48fff697a`. At SDK creation, the backend change was not deployed.
 
@@ -15,5 +15,7 @@ The reviewed differences from the full Swagger representation are deliberate.
 - FOCUS push creation requires a billing-account identifier. Provider, display name, and tenant are optional. The key's tenant is the default; omitting the provider allows the first billing push to set it.
 - Rename and disconnect return success envelopes without a data payload. The facade also handles `204 No Content` without attempting JSON decoding.
 - Error response schemas document the API shape, but the public facade exposes only the HTTP status and operation name. Arbitrary server text and raw bodies are not diagnostics.
+
+The expanded management subset follows the reviewed code on the backend `feat/terraform-management-api` change. Its tenant contract has explicit organization and tenant UUID path parameters and requires an organization owner with `organization:manage`. Cloud request schemas deliberately omit long-lived credentials. AWS role and GCP impersonation update objects retain optional nested pointers, while AI gateway update maps distinguish omission from an explicit empty map. Cloud settings expose no secret material. The model-search operation reads canonical keys, display names, and publishers from the existing gateway model catalog endpoint; it returns at most twenty matches, not the whole catalog.
 
 Run `make generate` to regenerate with oapi-codegen v2.9.0. Run `make check-generated` to verify the committed client matches this snapshot. Neither command downloads the live CostGraph schema.

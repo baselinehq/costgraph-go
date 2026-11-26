@@ -15,6 +15,147 @@ import (
 	"github.com/oapi-codegen/runtime"
 )
 
+// AIGatewayConnectRequest defines model for AIGatewayConnectRequest.
+type AIGatewayConnectRequest struct {
+	ClusterID           string            `json:"cluster_id,omitempty"`
+	DisplayName         string            `json:"display_name,omitempty"`
+	IngestMode          string            `json:"ingest_mode,omitempty"`
+	InstanceID          string            `json:"instance_id,omitempty"`
+	ModelMap            map[string]string `json:"model_map,omitempty"`
+	Provider            string            `json:"provider"`
+	ProviderAccountID   string            `json:"provider_account_id"`
+	ScrapeLabelSelector string            `json:"scrape_label_selector,omitempty"`
+	ScrapeNamespace     string            `json:"scrape_namespace,omitempty"`
+	ScrapePort          int               `json:"scrape_port,omitempty"`
+	TenantID            string            `json:"tenant_id"`
+}
+
+// AIGatewaySettings defines model for AIGatewaySettings.
+type AIGatewaySettings struct {
+	ClusterID           *string           `json:"cluster_id"`
+	IngestMode          string            `json:"ingest_mode"`
+	InstanceID          *string           `json:"instance_id"`
+	ModelMap            map[string]string `json:"model_map"`
+	ScrapeLabelSelector *string           `json:"scrape_label_selector"`
+	ScrapeNamespace     *string           `json:"scrape_namespace"`
+	ScrapePort          *int              `json:"scrape_port"`
+	TenantMap           map[string]string `json:"tenant_map"`
+	UnmatchedModels     []string          `json:"unmatched_models"`
+}
+
+// AIGatewaySettingsResponse defines model for AIGatewaySettingsResponse.
+type AIGatewaySettingsResponse struct {
+	Data    AIGatewaySettings `json:"data"`
+	Message string            `json:"message"`
+	Status  string            `json:"status"`
+}
+
+// AIGatewayUpdateRequest defines model for AIGatewayUpdateRequest.
+type AIGatewayUpdateRequest struct {
+	ClusterID           *string            `json:"cluster_id,omitempty"`
+	InstanceID          *string            `json:"instance_id,omitempty"`
+	ModelMap            *map[string]string `json:"model_map,omitempty"`
+	ScrapeLabelSelector *string            `json:"scrape_label_selector,omitempty"`
+	ScrapeNamespace     *string            `json:"scrape_namespace,omitempty"`
+	ScrapePort          *int               `json:"scrape_port,omitempty"`
+	TenantMap           *map[string]string `json:"tenant_map,omitempty"`
+}
+
+// AWSAssumeRole defines model for AWSAssumeRole.
+type AWSAssumeRole struct {
+	RoleARN string `json:"role_arn"`
+}
+
+// AWSAssumeRoleSettings defines model for AWSAssumeRoleSettings.
+type AWSAssumeRoleSettings struct {
+	AutomationRoleARN *string   `json:"automation_role_arn,omitempty"`
+	AutomationScopes  *[]string `json:"automation_scopes,omitempty"`
+	ExternalID        string    `json:"external_id"`
+	RoleARN           string    `json:"role_arn"`
+}
+
+// AWSAssumeRoleUpdate defines model for AWSAssumeRoleUpdate.
+type AWSAssumeRoleUpdate struct {
+	RoleARN *string `json:"role_arn,omitempty"`
+}
+
+// AWSConnectRequest defines model for AWSConnectRequest.
+type AWSConnectRequest struct {
+	ActivateCostAllocationTags *bool         `json:"activate_cost_allocation_tags,omitempty"`
+	AssumeRole                 AWSAssumeRole `json:"assume_role"`
+	BillingAccountID           string        `json:"billing_account_id"`
+	Bucket                     string        `json:"bucket"`
+	DisplayName                string        `json:"display_name,omitempty"`
+	EnableRecommendations      *bool         `json:"enable_recommendations,omitempty"`
+	Prefix                     string        `json:"prefix,omitempty"`
+	Region                     string        `json:"region"`
+	TenantID                   string        `json:"tenant_id"`
+}
+
+// AWSConnectionSettings defines model for AWSConnectionSettings.
+type AWSConnectionSettings struct {
+	ActivateCostAllocationTags bool                  `json:"activate_cost_allocation_tags"`
+	AssumeRole                 AWSAssumeRoleSettings `json:"assume_role"`
+	BillingAccountID           string                `json:"billing_account_id"`
+	Bucket                     string                `json:"bucket"`
+	ConnectionID               string                `json:"connection_id"`
+	DisplayName                string                `json:"display_name"`
+	EnableRecommendations      bool                  `json:"enable_recommendations"`
+	ID                         string                `json:"id"`
+	Kind                       string                `json:"kind"`
+	Prefix                     string                `json:"prefix"`
+	Region                     string                `json:"region"`
+	TenantID                   string                `json:"tenant_id"`
+}
+
+// AWSConnectionSettingsResponse defines model for AWSConnectionSettingsResponse.
+type AWSConnectionSettingsResponse struct {
+	Data    AWSConnectionSettings `json:"data"`
+	Message string                `json:"message"`
+	Status  string                `json:"status"`
+}
+
+// AWSConnectionUpdateRequest defines model for AWSConnectionUpdateRequest.
+type AWSConnectionUpdateRequest struct {
+	ActivateCostAllocationTags *bool                `json:"activate_cost_allocation_tags,omitempty"`
+	AssumeRole                 *AWSAssumeRoleUpdate `json:"assume_role,omitempty"`
+	Bucket                     *string              `json:"bucket,omitempty"`
+	DisplayName                *string              `json:"display_name,omitempty"`
+	EnableRecommendations      *bool                `json:"enable_recommendations,omitempty"`
+	Prefix                     *string              `json:"prefix,omitempty"`
+	Region                     *string              `json:"region,omitempty"`
+}
+
+// CatalogModel defines model for CatalogModel.
+type CatalogModel struct {
+	DisplayName string `json:"display_name"`
+	Key         string `json:"key"`
+	Publisher   string `json:"publisher"`
+}
+
+// CatalogModelListResponse defines model for CatalogModelListResponse.
+type CatalogModelListResponse struct {
+	Data    []CatalogModel `json:"data"`
+	Message string         `json:"message"`
+	Status  string         `json:"status"`
+}
+
+// ConnectedIntegration defines model for ConnectedIntegration.
+type ConnectedIntegration struct {
+	AutomationEnabled *bool  `json:"automation_enabled,omitempty"`
+	ConnectionID      string `json:"connection_id"`
+	ID                string `json:"id"`
+	Kind              string `json:"kind"`
+	Provider          string `json:"provider"`
+}
+
+// ConnectedIntegrationResponse defines model for ConnectedIntegrationResponse.
+type ConnectedIntegrationResponse struct {
+	Data    ConnectedIntegration `json:"data"`
+	Message string               `json:"message"`
+	Status  string               `json:"status"`
+}
+
 // Connection defines model for Connection.
 type Connection struct {
 	ConnectionID      string     `json:"connection_id"`
@@ -53,10 +194,62 @@ type CreatePushConnectionRequest struct {
 	TenantID          string `json:"tenant_id,omitempty"`
 }
 
+// CreateTenantRequest defines model for CreateTenantRequest.
+type CreateTenantRequest struct {
+	Name string `json:"name"`
+}
+
 // ErrorResponse defines model for ErrorResponse.
 type ErrorResponse struct {
 	Message string `json:"message"`
 	Status  string `json:"status"`
+}
+
+// GCPConnectRequest defines model for GCPConnectRequest.
+type GCPConnectRequest struct {
+	BillingAccountID      string           `json:"billing_account_id"`
+	DisplayName           string           `json:"display_name,omitempty"`
+	EnableRecommendations *bool            `json:"enable_recommendations,omitempty"`
+	Impersonation         GCPImpersonation `json:"impersonation"`
+	TenantID              string           `json:"tenant_id"`
+}
+
+// GCPConnectionSettings defines model for GCPConnectionSettings.
+type GCPConnectionSettings struct {
+	BillingAccountID      string           `json:"billing_account_id"`
+	ConnectionID          string           `json:"connection_id"`
+	DisplayName           string           `json:"display_name"`
+	EnableRecommendations bool             `json:"enable_recommendations"`
+	ID                    string           `json:"id"`
+	Impersonation         GCPImpersonation `json:"impersonation"`
+	Kind                  string           `json:"kind"`
+	TenantID              string           `json:"tenant_id"`
+}
+
+// GCPConnectionSettingsResponse defines model for GCPConnectionSettingsResponse.
+type GCPConnectionSettingsResponse struct {
+	Data    GCPConnectionSettings `json:"data"`
+	Message string                `json:"message"`
+	Status  string                `json:"status"`
+}
+
+// GCPConnectionUpdateRequest defines model for GCPConnectionUpdateRequest.
+type GCPConnectionUpdateRequest struct {
+	DisplayName           *string                 `json:"display_name,omitempty"`
+	EnableRecommendations *bool                   `json:"enable_recommendations,omitempty"`
+	Impersonation         *GCPImpersonationUpdate `json:"impersonation,omitempty"`
+}
+
+// GCPImpersonation defines model for GCPImpersonation.
+type GCPImpersonation struct {
+	QueryProject    string `json:"query_project"`
+	TargetPrincipal string `json:"target_principal"`
+}
+
+// GCPImpersonationUpdate defines model for GCPImpersonationUpdate.
+type GCPImpersonationUpdate struct {
+	QueryProject    *string `json:"query_project,omitempty"`
+	TargetPrincipal *string `json:"target_principal,omitempty"`
 }
 
 // Identity defines model for Identity.
@@ -93,6 +286,29 @@ type IntegrationProvider struct {
 	Slug              string                        `json:"slug"`
 }
 
+// ManagedTenant defines model for ManagedTenant.
+type ManagedTenant struct {
+	Active           bool   `json:"active"`
+	ID               string `json:"id"`
+	Name             string `json:"name"`
+	OrganizationID   string `json:"organization_id"`
+	OrganizationName string `json:"organization_name"`
+}
+
+// ManagedTenantListResponse defines model for ManagedTenantListResponse.
+type ManagedTenantListResponse struct {
+	Data    []ManagedTenant `json:"data"`
+	Message string          `json:"message"`
+	Status  string          `json:"status"`
+}
+
+// ManagedTenantResponse defines model for ManagedTenantResponse.
+type ManagedTenantResponse struct {
+	Data    ManagedTenant `json:"data"`
+	Message string        `json:"message"`
+	Status  string        `json:"status"`
+}
+
 // ProviderEnvironmentVariable defines model for ProviderEnvironmentVariable.
 type ProviderEnvironmentVariable struct {
 	Alternatives *[]string `json:"alternatives,omitempty"`
@@ -127,11 +343,45 @@ type Tenant struct {
 	Name string `json:"name"`
 }
 
+// UpdateTenantRequest defines model for UpdateTenantRequest.
+type UpdateTenantRequest struct {
+	Name string `json:"name"`
+}
+
+// SearchAIGatewayModelsParams defines parameters for SearchAIGatewayModels.
+type SearchAIGatewayModelsParams struct {
+	Q *string `form:"q,omitempty" json:"q,omitempty"`
+}
+
+// CreateAIGatewayConnectionJSONRequestBody defines body for CreateAIGatewayConnection for application/json ContentType.
+type CreateAIGatewayConnectionJSONRequestBody = AIGatewayConnectRequest
+
+// ConnectAWSIntegrationJSONRequestBody defines body for ConnectAWSIntegration for application/json ContentType.
+type ConnectAWSIntegrationJSONRequestBody = AWSConnectRequest
+
 // CreateFocusPushConnectionJSONRequestBody defines body for CreateFocusPushConnection for application/json ContentType.
 type CreateFocusPushConnectionJSONRequestBody = CreatePushConnectionRequest
 
 // RenameIntegrationConnectionJSONRequestBody defines body for RenameIntegrationConnection for application/json ContentType.
 type RenameIntegrationConnectionJSONRequestBody = RenameConnectionRequest
+
+// UpdateAIGatewayConnectionJSONRequestBody defines body for UpdateAIGatewayConnection for application/json ContentType.
+type UpdateAIGatewayConnectionJSONRequestBody = AIGatewayUpdateRequest
+
+// UpdateAWSIntegrationSettingsJSONRequestBody defines body for UpdateAWSIntegrationSettings for application/json ContentType.
+type UpdateAWSIntegrationSettingsJSONRequestBody = AWSConnectionUpdateRequest
+
+// UpdateGoogleCloudIntegrationSettingsJSONRequestBody defines body for UpdateGoogleCloudIntegrationSettings for application/json ContentType.
+type UpdateGoogleCloudIntegrationSettingsJSONRequestBody = GCPConnectionUpdateRequest
+
+// ConnectGoogleCloudIntegrationJSONRequestBody defines body for ConnectGoogleCloudIntegration for application/json ContentType.
+type ConnectGoogleCloudIntegrationJSONRequestBody = GCPConnectRequest
+
+// CreateOrganizationTenantJSONRequestBody defines body for CreateOrganizationTenant for application/json ContentType.
+type CreateOrganizationTenantJSONRequestBody = CreateTenantRequest
+
+// UpdateOrganizationTenantJSONRequestBody defines body for UpdateOrganizationTenant for application/json ContentType.
+type UpdateOrganizationTenantJSONRequestBody = UpdateTenantRequest
 
 // RequestEditorFn is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
@@ -210,6 +460,25 @@ type ClientInterface interface {
 	// ListIntegrationConnections performs a GET /api/v1/integrations (the `ListIntegrationConnections` operationId) request.
 	ListIntegrationConnections(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// CreateAIGatewayConnectionWithBody performs a POST /api/v1/integrations/ai-gateway/connect (the `CreateAIGatewayConnection` operationId) request,
+	// with any type of body and a specified content type.
+	CreateAIGatewayConnectionWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateAIGatewayConnection performs a POST /api/v1/integrations/ai-gateway/connect (the `CreateAIGatewayConnection` operationId) request.
+	// Takes a body of the `application/json` content type.
+	CreateAIGatewayConnection(ctx context.Context, body CreateAIGatewayConnectionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// SearchAIGatewayModels performs a GET /api/v1/integrations/ai-gateway/models (the `SearchAIGatewayModels` operationId) request.
+	SearchAIGatewayModels(ctx context.Context, params *SearchAIGatewayModelsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ConnectAWSIntegrationWithBody performs a POST /api/v1/integrations/aws/connect (the `ConnectAWSIntegration` operationId) request,
+	// with any type of body and a specified content type.
+	ConnectAWSIntegrationWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ConnectAWSIntegration performs a POST /api/v1/integrations/aws/connect (the `ConnectAWSIntegration` operationId) request.
+	// Takes a body of the `application/json` content type.
+	ConnectAWSIntegration(ctx context.Context, body ConnectAWSIntegrationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// CreateFocusPushConnectionWithBody performs a POST /api/v1/integrations/connections (the `CreateFocusPushConnection` operationId) request,
 	// with any type of body and a specified content type.
 	CreateFocusPushConnectionWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -232,16 +501,151 @@ type ClientInterface interface {
 	// Takes a body of the `application/json` content type.
 	RenameIntegrationConnection(ctx context.Context, id string, body RenameIntegrationConnectionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetAIGatewaySettings performs a GET /api/v1/integrations/connections/{id}/ai-gateway (the `GetAIGatewaySettings` operationId) request.
+	GetAIGatewaySettings(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateAIGatewayConnectionWithBody performs a PATCH /api/v1/integrations/connections/{id}/ai-gateway (the `UpdateAIGatewayConnection` operationId) request,
+	// with any type of body and a specified content type.
+	UpdateAIGatewayConnectionWithBody(ctx context.Context, id string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateAIGatewayConnection performs a PATCH /api/v1/integrations/connections/{id}/ai-gateway (the `UpdateAIGatewayConnection` operationId) request.
+	// Takes a body of the `application/json` content type.
+	UpdateAIGatewayConnection(ctx context.Context, id string, body UpdateAIGatewayConnectionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetAWSIntegrationSettings performs a GET /api/v1/integrations/connections/{id}/aws (the `GetAWSIntegrationSettings` operationId) request.
+	GetAWSIntegrationSettings(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateAWSIntegrationSettingsWithBody performs a PATCH /api/v1/integrations/connections/{id}/aws (the `UpdateAWSIntegrationSettings` operationId) request,
+	// with any type of body and a specified content type.
+	UpdateAWSIntegrationSettingsWithBody(ctx context.Context, id string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateAWSIntegrationSettings performs a PATCH /api/v1/integrations/connections/{id}/aws (the `UpdateAWSIntegrationSettings` operationId) request.
+	// Takes a body of the `application/json` content type.
+	UpdateAWSIntegrationSettings(ctx context.Context, id string, body UpdateAWSIntegrationSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetGoogleCloudIntegrationSettings performs a GET /api/v1/integrations/connections/{id}/gcp (the `GetGoogleCloudIntegrationSettings` operationId) request.
+	GetGoogleCloudIntegrationSettings(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateGoogleCloudIntegrationSettingsWithBody performs a PATCH /api/v1/integrations/connections/{id}/gcp (the `UpdateGoogleCloudIntegrationSettings` operationId) request,
+	// with any type of body and a specified content type.
+	UpdateGoogleCloudIntegrationSettingsWithBody(ctx context.Context, id string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateGoogleCloudIntegrationSettings performs a PATCH /api/v1/integrations/connections/{id}/gcp (the `UpdateGoogleCloudIntegrationSettings` operationId) request.
+	// Takes a body of the `application/json` content type.
+	UpdateGoogleCloudIntegrationSettings(ctx context.Context, id string, body UpdateGoogleCloudIntegrationSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// ListFocusProviders performs a GET /api/v1/integrations/focus/providers (the `ListFocusProviders` operationId) request.
 	ListFocusProviders(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// ConnectGoogleCloudIntegrationWithBody performs a POST /api/v1/integrations/gcp/connect (the `ConnectGoogleCloudIntegration` operationId) request,
+	// with any type of body and a specified content type.
+	ConnectGoogleCloudIntegrationWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ConnectGoogleCloudIntegration performs a POST /api/v1/integrations/gcp/connect (the `ConnectGoogleCloudIntegration` operationId) request.
+	// Takes a body of the `application/json` content type.
+	ConnectGoogleCloudIntegration(ctx context.Context, body ConnectGoogleCloudIntegrationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// CurrentIdentity performs a GET /api/v1/me (the `CurrentIdentity` operationId) request.
 	CurrentIdentity(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// ListOrganizationTenants performs a GET /api/v1/organizations/{org_id}/tenants (the `ListOrganizationTenants` operationId) request.
+	ListOrganizationTenants(ctx context.Context, orgId string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateOrganizationTenantWithBody performs a POST /api/v1/organizations/{org_id}/tenants (the `CreateOrganizationTenant` operationId) request,
+	// with any type of body and a specified content type.
+	CreateOrganizationTenantWithBody(ctx context.Context, orgId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// CreateOrganizationTenant performs a POST /api/v1/organizations/{org_id}/tenants (the `CreateOrganizationTenant` operationId) request.
+	// Takes a body of the `application/json` content type.
+	CreateOrganizationTenant(ctx context.Context, orgId string, body CreateOrganizationTenantJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteOrganizationTenant performs a DELETE /api/v1/organizations/{org_id}/tenants/{tenant_id} (the `DeleteOrganizationTenant` operationId) request.
+	DeleteOrganizationTenant(ctx context.Context, orgId string, tenantId string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetOrganizationTenant performs a GET /api/v1/organizations/{org_id}/tenants/{tenant_id} (the `GetOrganizationTenant` operationId) request.
+	GetOrganizationTenant(ctx context.Context, orgId string, tenantId string, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateOrganizationTenantWithBody performs a PATCH /api/v1/organizations/{org_id}/tenants/{tenant_id} (the `UpdateOrganizationTenant` operationId) request,
+	// with any type of body and a specified content type.
+	UpdateOrganizationTenantWithBody(ctx context.Context, orgId string, tenantId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// UpdateOrganizationTenant performs a PATCH /api/v1/organizations/{org_id}/tenants/{tenant_id} (the `UpdateOrganizationTenant` operationId) request.
+	// Takes a body of the `application/json` content type.
+	UpdateOrganizationTenant(ctx context.Context, orgId string, tenantId string, body UpdateOrganizationTenantJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
 // ListIntegrationConnections performs a GET /api/v1/integrations (the `ListIntegrationConnections` operationId) request.
 func (c *Client) ListIntegrationConnections(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListIntegrationConnectionsRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CreateAIGatewayConnectionWithBody performs a POST /api/v1/integrations/ai-gateway/connect (the `CreateAIGatewayConnection` operationId) request,
+// with any type of body and a specified content type.
+func (c *Client) CreateAIGatewayConnectionWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateAIGatewayConnectionRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CreateAIGatewayConnection performs a POST /api/v1/integrations/ai-gateway/connect (the `CreateAIGatewayConnection` operationId) request.
+// Takes a body of the `application/json` content type.
+func (c *Client) CreateAIGatewayConnection(ctx context.Context, body CreateAIGatewayConnectionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateAIGatewayConnectionRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// SearchAIGatewayModels performs a GET /api/v1/integrations/ai-gateway/models (the `SearchAIGatewayModels` operationId) request.
+func (c *Client) SearchAIGatewayModels(ctx context.Context, params *SearchAIGatewayModelsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewSearchAIGatewayModelsRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ConnectAWSIntegrationWithBody performs a POST /api/v1/integrations/aws/connect (the `ConnectAWSIntegration` operationId) request,
+// with any type of body and a specified content type.
+func (c *Client) ConnectAWSIntegrationWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectAWSIntegrationRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ConnectAWSIntegration performs a POST /api/v1/integrations/aws/connect (the `ConnectAWSIntegration` operationId) request.
+// Takes a body of the `application/json` content type.
+func (c *Client) ConnectAWSIntegration(ctx context.Context, body ConnectAWSIntegrationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectAWSIntegrationRequest(c.Server, body)
 	if err != nil {
 		return nil, err
 	}
@@ -334,6 +738,129 @@ func (c *Client) RenameIntegrationConnection(ctx context.Context, id string, bod
 	return c.Client.Do(req)
 }
 
+// GetAIGatewaySettings performs a GET /api/v1/integrations/connections/{id}/ai-gateway (the `GetAIGatewaySettings` operationId) request.
+func (c *Client) GetAIGatewaySettings(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAIGatewaySettingsRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// UpdateAIGatewayConnectionWithBody performs a PATCH /api/v1/integrations/connections/{id}/ai-gateway (the `UpdateAIGatewayConnection` operationId) request,
+// with any type of body and a specified content type.
+func (c *Client) UpdateAIGatewayConnectionWithBody(ctx context.Context, id string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateAIGatewayConnectionRequestWithBody(c.Server, id, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// UpdateAIGatewayConnection performs a PATCH /api/v1/integrations/connections/{id}/ai-gateway (the `UpdateAIGatewayConnection` operationId) request.
+// Takes a body of the `application/json` content type.
+func (c *Client) UpdateAIGatewayConnection(ctx context.Context, id string, body UpdateAIGatewayConnectionJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateAIGatewayConnectionRequest(c.Server, id, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// GetAWSIntegrationSettings performs a GET /api/v1/integrations/connections/{id}/aws (the `GetAWSIntegrationSettings` operationId) request.
+func (c *Client) GetAWSIntegrationSettings(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetAWSIntegrationSettingsRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// UpdateAWSIntegrationSettingsWithBody performs a PATCH /api/v1/integrations/connections/{id}/aws (the `UpdateAWSIntegrationSettings` operationId) request,
+// with any type of body and a specified content type.
+func (c *Client) UpdateAWSIntegrationSettingsWithBody(ctx context.Context, id string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateAWSIntegrationSettingsRequestWithBody(c.Server, id, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// UpdateAWSIntegrationSettings performs a PATCH /api/v1/integrations/connections/{id}/aws (the `UpdateAWSIntegrationSettings` operationId) request.
+// Takes a body of the `application/json` content type.
+func (c *Client) UpdateAWSIntegrationSettings(ctx context.Context, id string, body UpdateAWSIntegrationSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateAWSIntegrationSettingsRequest(c.Server, id, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// GetGoogleCloudIntegrationSettings performs a GET /api/v1/integrations/connections/{id}/gcp (the `GetGoogleCloudIntegrationSettings` operationId) request.
+func (c *Client) GetGoogleCloudIntegrationSettings(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetGoogleCloudIntegrationSettingsRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// UpdateGoogleCloudIntegrationSettingsWithBody performs a PATCH /api/v1/integrations/connections/{id}/gcp (the `UpdateGoogleCloudIntegrationSettings` operationId) request,
+// with any type of body and a specified content type.
+func (c *Client) UpdateGoogleCloudIntegrationSettingsWithBody(ctx context.Context, id string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateGoogleCloudIntegrationSettingsRequestWithBody(c.Server, id, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// UpdateGoogleCloudIntegrationSettings performs a PATCH /api/v1/integrations/connections/{id}/gcp (the `UpdateGoogleCloudIntegrationSettings` operationId) request.
+// Takes a body of the `application/json` content type.
+func (c *Client) UpdateGoogleCloudIntegrationSettings(ctx context.Context, id string, body UpdateGoogleCloudIntegrationSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateGoogleCloudIntegrationSettingsRequest(c.Server, id, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 // ListFocusProviders performs a GET /api/v1/integrations/focus/providers (the `ListFocusProviders` operationId) request.
 func (c *Client) ListFocusProviders(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewListFocusProvidersRequest(c.Server)
@@ -347,9 +874,132 @@ func (c *Client) ListFocusProviders(ctx context.Context, reqEditors ...RequestEd
 	return c.Client.Do(req)
 }
 
+// ConnectGoogleCloudIntegrationWithBody performs a POST /api/v1/integrations/gcp/connect (the `ConnectGoogleCloudIntegration` operationId) request,
+// with any type of body and a specified content type.
+func (c *Client) ConnectGoogleCloudIntegrationWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectGoogleCloudIntegrationRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ConnectGoogleCloudIntegration performs a POST /api/v1/integrations/gcp/connect (the `ConnectGoogleCloudIntegration` operationId) request.
+// Takes a body of the `application/json` content type.
+func (c *Client) ConnectGoogleCloudIntegration(ctx context.Context, body ConnectGoogleCloudIntegrationJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewConnectGoogleCloudIntegrationRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 // CurrentIdentity performs a GET /api/v1/me (the `CurrentIdentity` operationId) request.
 func (c *Client) CurrentIdentity(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewCurrentIdentityRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// ListOrganizationTenants performs a GET /api/v1/organizations/{org_id}/tenants (the `ListOrganizationTenants` operationId) request.
+func (c *Client) ListOrganizationTenants(ctx context.Context, orgId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewListOrganizationTenantsRequest(c.Server, orgId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CreateOrganizationTenantWithBody performs a POST /api/v1/organizations/{org_id}/tenants (the `CreateOrganizationTenant` operationId) request,
+// with any type of body and a specified content type.
+func (c *Client) CreateOrganizationTenantWithBody(ctx context.Context, orgId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateOrganizationTenantRequestWithBody(c.Server, orgId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// CreateOrganizationTenant performs a POST /api/v1/organizations/{org_id}/tenants (the `CreateOrganizationTenant` operationId) request.
+// Takes a body of the `application/json` content type.
+func (c *Client) CreateOrganizationTenant(ctx context.Context, orgId string, body CreateOrganizationTenantJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewCreateOrganizationTenantRequest(c.Server, orgId, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// DeleteOrganizationTenant performs a DELETE /api/v1/organizations/{org_id}/tenants/{tenant_id} (the `DeleteOrganizationTenant` operationId) request.
+func (c *Client) DeleteOrganizationTenant(ctx context.Context, orgId string, tenantId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteOrganizationTenantRequest(c.Server, orgId, tenantId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// GetOrganizationTenant performs a GET /api/v1/organizations/{org_id}/tenants/{tenant_id} (the `GetOrganizationTenant` operationId) request.
+func (c *Client) GetOrganizationTenant(ctx context.Context, orgId string, tenantId string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetOrganizationTenantRequest(c.Server, orgId, tenantId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// UpdateOrganizationTenantWithBody performs a PATCH /api/v1/organizations/{org_id}/tenants/{tenant_id} (the `UpdateOrganizationTenant` operationId) request,
+// with any type of body and a specified content type.
+func (c *Client) UpdateOrganizationTenantWithBody(ctx context.Context, orgId string, tenantId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateOrganizationTenantRequestWithBody(c.Server, orgId, tenantId, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// UpdateOrganizationTenant performs a PATCH /api/v1/organizations/{org_id}/tenants/{tenant_id} (the `UpdateOrganizationTenant` operationId) request.
+// Takes a body of the `application/json` content type.
+func (c *Client) UpdateOrganizationTenant(ctx context.Context, orgId string, tenantId string, body UpdateOrganizationTenantJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewUpdateOrganizationTenantRequest(c.Server, orgId, tenantId, body)
 	if err != nil {
 		return nil, err
 	}
@@ -383,6 +1033,140 @@ func NewListIntegrationConnectionsRequest(server string) (*http.Request, error) 
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewCreateAIGatewayConnectionRequest calls the generic CreateAIGatewayConnection builder with application/json body
+func NewCreateAIGatewayConnectionRequest(server string, body CreateAIGatewayConnectionJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateAIGatewayConnectionRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewCreateAIGatewayConnectionRequestWithBody constructs an http.Request for the CreateAIGatewayConnection method, with any body, and a specified content type
+func NewCreateAIGatewayConnectionRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/api/v1/integrations/ai-gateway/connect"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewSearchAIGatewayModelsRequest constructs an http.Request for the SearchAIGatewayModels method
+func NewSearchAIGatewayModelsRequest(server string, params *SearchAIGatewayModelsParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/api/v1/integrations/ai-gateway/models"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		// queryValues collects non-styled parameters (passthrough, JSON)
+		// that are safe to round-trip through url.Values.Encode().
+		queryValues := queryURL.Query()
+		// rawQueryFragments collects pre-encoded query fragments from
+		// styled parameters, preserving literal commas as delimiters
+		// per the OpenAPI spec (e.g. "color=blue,black,brown").
+		var rawQueryFragments []string
+
+		if params.Q != nil {
+
+			if queryFrag, err := runtime.StyleParamWithOptions("form", true, "q", *params.Q, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationQuery, Type: "string", Format: ""}); err != nil {
+				return nil, err
+			} else {
+				for _, qp := range strings.Split(queryFrag, "&") {
+					rawQueryFragments = append(rawQueryFragments, qp)
+				}
+			}
+
+		}
+
+		if encoded := queryValues.Encode(); encoded != "" {
+			rawQueryFragments = append(rawQueryFragments, encoded)
+		}
+		queryURL.RawQuery = strings.Join(rawQueryFragments, "&")
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewConnectAWSIntegrationRequest calls the generic ConnectAWSIntegration builder with application/json body
+func NewConnectAWSIntegrationRequest(server string, body ConnectAWSIntegrationJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewConnectAWSIntegrationRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewConnectAWSIntegrationRequestWithBody constructs an http.Request for the ConnectAWSIntegration method, with any body, and a specified content type
+func NewConnectAWSIntegrationRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/api/v1/integrations/aws/connect"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -542,6 +1326,249 @@ func NewRenameIntegrationConnectionRequestWithBody(server string, id string, con
 	return req, nil
 }
 
+// NewGetAIGatewaySettingsRequest constructs an http.Request for the GetAIGatewaySettings method
+func NewGetAIGatewaySettingsRequest(server string, id string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/api/v1/integrations/connections/" + pathParam0 + "/ai-gateway"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateAIGatewayConnectionRequest calls the generic UpdateAIGatewayConnection builder with application/json body
+func NewUpdateAIGatewayConnectionRequest(server string, id string, body UpdateAIGatewayConnectionJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateAIGatewayConnectionRequestWithBody(server, id, "application/json", bodyReader)
+}
+
+// NewUpdateAIGatewayConnectionRequestWithBody constructs an http.Request for the UpdateAIGatewayConnection method, with any body, and a specified content type
+func NewUpdateAIGatewayConnectionRequestWithBody(server string, id string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/api/v1/integrations/connections/" + pathParam0 + "/ai-gateway"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPatch, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetAWSIntegrationSettingsRequest constructs an http.Request for the GetAWSIntegrationSettings method
+func NewGetAWSIntegrationSettingsRequest(server string, id string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/api/v1/integrations/connections/" + pathParam0 + "/aws"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateAWSIntegrationSettingsRequest calls the generic UpdateAWSIntegrationSettings builder with application/json body
+func NewUpdateAWSIntegrationSettingsRequest(server string, id string, body UpdateAWSIntegrationSettingsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateAWSIntegrationSettingsRequestWithBody(server, id, "application/json", bodyReader)
+}
+
+// NewUpdateAWSIntegrationSettingsRequestWithBody constructs an http.Request for the UpdateAWSIntegrationSettings method, with any body, and a specified content type
+func NewUpdateAWSIntegrationSettingsRequestWithBody(server string, id string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/api/v1/integrations/connections/" + pathParam0 + "/aws"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPatch, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetGoogleCloudIntegrationSettingsRequest constructs an http.Request for the GetGoogleCloudIntegrationSettings method
+func NewGetGoogleCloudIntegrationSettingsRequest(server string, id string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/api/v1/integrations/connections/" + pathParam0 + "/gcp"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateGoogleCloudIntegrationSettingsRequest calls the generic UpdateGoogleCloudIntegrationSettings builder with application/json body
+func NewUpdateGoogleCloudIntegrationSettingsRequest(server string, id string, body UpdateGoogleCloudIntegrationSettingsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateGoogleCloudIntegrationSettingsRequestWithBody(server, id, "application/json", bodyReader)
+}
+
+// NewUpdateGoogleCloudIntegrationSettingsRequestWithBody constructs an http.Request for the UpdateGoogleCloudIntegrationSettings method, with any body, and a specified content type
+func NewUpdateGoogleCloudIntegrationSettingsRequestWithBody(server string, id string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "id", id, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/api/v1/integrations/connections/" + pathParam0 + "/gcp"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPatch, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewListFocusProvidersRequest constructs an http.Request for the ListFocusProviders method
 func NewListFocusProvidersRequest(server string) (*http.Request, error) {
 	var err error
@@ -569,6 +1596,46 @@ func NewListFocusProvidersRequest(server string) (*http.Request, error) {
 	return req, nil
 }
 
+// NewConnectGoogleCloudIntegrationRequest calls the generic ConnectGoogleCloudIntegration builder with application/json body
+func NewConnectGoogleCloudIntegrationRequest(server string, body ConnectGoogleCloudIntegrationJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewConnectGoogleCloudIntegrationRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewConnectGoogleCloudIntegrationRequestWithBody constructs an http.Request for the ConnectGoogleCloudIntegration method, with any body, and a specified content type
+func NewConnectGoogleCloudIntegrationRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/api/v1/integrations/gcp/connect"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
 // NewCurrentIdentityRequest constructs an http.Request for the CurrentIdentity method
 func NewCurrentIdentityRequest(server string) (*http.Request, error) {
 	var err error
@@ -592,6 +1659,223 @@ func NewCurrentIdentityRequest(server string) (*http.Request, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewListOrganizationTenantsRequest constructs an http.Request for the ListOrganizationTenants method
+func NewListOrganizationTenantsRequest(server string, orgId string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "org_id", orgId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/api/v1/organizations/" + pathParam0 + "/tenants"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewCreateOrganizationTenantRequest calls the generic CreateOrganizationTenant builder with application/json body
+func NewCreateOrganizationTenantRequest(server string, orgId string, body CreateOrganizationTenantJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewCreateOrganizationTenantRequestWithBody(server, orgId, "application/json", bodyReader)
+}
+
+// NewCreateOrganizationTenantRequestWithBody constructs an http.Request for the CreateOrganizationTenant method, with any body, and a specified content type
+func NewCreateOrganizationTenantRequestWithBody(server string, orgId string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "org_id", orgId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/api/v1/organizations/" + pathParam0 + "/tenants"
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteOrganizationTenantRequest constructs an http.Request for the DeleteOrganizationTenant method
+func NewDeleteOrganizationTenantRequest(server string, orgId string, tenantId string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "org_id", orgId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "tenant_id", tenantId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/api/v1/organizations/" + pathParam0 + "/tenants/" + pathParam1
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodDelete, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetOrganizationTenantRequest constructs an http.Request for the GetOrganizationTenant method
+func NewGetOrganizationTenantRequest(server string, orgId string, tenantId string) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "org_id", orgId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "tenant_id", tenantId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/api/v1/organizations/" + pathParam0 + "/tenants/" + pathParam1
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodGet, queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewUpdateOrganizationTenantRequest calls the generic UpdateOrganizationTenant builder with application/json body
+func NewUpdateOrganizationTenantRequest(server string, orgId string, tenantId string, body UpdateOrganizationTenantJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := runtime.JSONMarshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewUpdateOrganizationTenantRequestWithBody(server, orgId, tenantId, "application/json", bodyReader)
+}
+
+// NewUpdateOrganizationTenantRequestWithBody constructs an http.Request for the UpdateOrganizationTenant method, with any body, and a specified content type
+func NewUpdateOrganizationTenantRequestWithBody(server string, orgId string, tenantId string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithOptions("simple", false, "org_id", orgId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithOptions("simple", false, "tenant_id", tenantId, runtime.StyleParamOptions{ParamLocation: runtime.ParamLocationPath, Type: "string", Format: ""})
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := "/api/v1/organizations/" + pathParam0 + "/tenants/" + pathParam1
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPatch, queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -645,6 +1929,31 @@ type ClientWithResponsesInterface interface {
 	// Returns a wrapper object for the known response body format(s).
 	ListIntegrationConnectionsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListIntegrationConnectionsResponse, error)
 
+	// CreateAIGatewayConnectionWithBodyWithResponse performs a POST /api/v1/integrations/ai-gateway/connect (the `CreateAIGatewayConnection` operationId) request,
+	// with any type of body and a specified content type.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	CreateAIGatewayConnectionWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateAIGatewayConnectionResponse, error)
+
+	// CreateAIGatewayConnectionWithResponse performs a POST /api/v1/integrations/ai-gateway/connect (the `CreateAIGatewayConnection` operationId) request.
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	CreateAIGatewayConnectionWithResponse(ctx context.Context, body CreateAIGatewayConnectionJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateAIGatewayConnectionResponse, error)
+
+	// SearchAIGatewayModelsWithResponse performs a GET /api/v1/integrations/ai-gateway/models (the `SearchAIGatewayModels` operationId) request.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	SearchAIGatewayModelsWithResponse(ctx context.Context, params *SearchAIGatewayModelsParams, reqEditors ...RequestEditorFn) (*SearchAIGatewayModelsResponse, error)
+
+	// ConnectAWSIntegrationWithBodyWithResponse performs a POST /api/v1/integrations/aws/connect (the `ConnectAWSIntegration` operationId) request,
+	// with any type of body and a specified content type.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	ConnectAWSIntegrationWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ConnectAWSIntegrationResponse, error)
+
+	// ConnectAWSIntegrationWithResponse performs a POST /api/v1/integrations/aws/connect (the `ConnectAWSIntegration` operationId) request.
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	ConnectAWSIntegrationWithResponse(ctx context.Context, body ConnectAWSIntegrationJSONRequestBody, reqEditors ...RequestEditorFn) (*ConnectAWSIntegrationResponse, error)
+
 	// CreateFocusPushConnectionWithBodyWithResponse performs a POST /api/v1/integrations/connections (the `CreateFocusPushConnection` operationId) request,
 	// with any type of body and a specified content type.
 	//
@@ -675,15 +1984,105 @@ type ClientWithResponsesInterface interface {
 	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
 	RenameIntegrationConnectionWithResponse(ctx context.Context, id string, body RenameIntegrationConnectionJSONRequestBody, reqEditors ...RequestEditorFn) (*RenameIntegrationConnectionResponse, error)
 
+	// GetAIGatewaySettingsWithResponse performs a GET /api/v1/integrations/connections/{id}/ai-gateway (the `GetAIGatewaySettings` operationId) request.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	GetAIGatewaySettingsWithResponse(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*GetAIGatewaySettingsResponse, error)
+
+	// UpdateAIGatewayConnectionWithBodyWithResponse performs a PATCH /api/v1/integrations/connections/{id}/ai-gateway (the `UpdateAIGatewayConnection` operationId) request,
+	// with any type of body and a specified content type.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	UpdateAIGatewayConnectionWithBodyWithResponse(ctx context.Context, id string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateAIGatewayConnectionResponse, error)
+
+	// UpdateAIGatewayConnectionWithResponse performs a PATCH /api/v1/integrations/connections/{id}/ai-gateway (the `UpdateAIGatewayConnection` operationId) request.
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	UpdateAIGatewayConnectionWithResponse(ctx context.Context, id string, body UpdateAIGatewayConnectionJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateAIGatewayConnectionResponse, error)
+
+	// GetAWSIntegrationSettingsWithResponse performs a GET /api/v1/integrations/connections/{id}/aws (the `GetAWSIntegrationSettings` operationId) request.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	GetAWSIntegrationSettingsWithResponse(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*GetAWSIntegrationSettingsResponse, error)
+
+	// UpdateAWSIntegrationSettingsWithBodyWithResponse performs a PATCH /api/v1/integrations/connections/{id}/aws (the `UpdateAWSIntegrationSettings` operationId) request,
+	// with any type of body and a specified content type.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	UpdateAWSIntegrationSettingsWithBodyWithResponse(ctx context.Context, id string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateAWSIntegrationSettingsResponse, error)
+
+	// UpdateAWSIntegrationSettingsWithResponse performs a PATCH /api/v1/integrations/connections/{id}/aws (the `UpdateAWSIntegrationSettings` operationId) request.
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	UpdateAWSIntegrationSettingsWithResponse(ctx context.Context, id string, body UpdateAWSIntegrationSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateAWSIntegrationSettingsResponse, error)
+
+	// GetGoogleCloudIntegrationSettingsWithResponse performs a GET /api/v1/integrations/connections/{id}/gcp (the `GetGoogleCloudIntegrationSettings` operationId) request.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	GetGoogleCloudIntegrationSettingsWithResponse(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*GetGoogleCloudIntegrationSettingsResponse, error)
+
+	// UpdateGoogleCloudIntegrationSettingsWithBodyWithResponse performs a PATCH /api/v1/integrations/connections/{id}/gcp (the `UpdateGoogleCloudIntegrationSettings` operationId) request,
+	// with any type of body and a specified content type.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	UpdateGoogleCloudIntegrationSettingsWithBodyWithResponse(ctx context.Context, id string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateGoogleCloudIntegrationSettingsResponse, error)
+
+	// UpdateGoogleCloudIntegrationSettingsWithResponse performs a PATCH /api/v1/integrations/connections/{id}/gcp (the `UpdateGoogleCloudIntegrationSettings` operationId) request.
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	UpdateGoogleCloudIntegrationSettingsWithResponse(ctx context.Context, id string, body UpdateGoogleCloudIntegrationSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateGoogleCloudIntegrationSettingsResponse, error)
+
 	// ListFocusProvidersWithResponse performs a GET /api/v1/integrations/focus/providers (the `ListFocusProviders` operationId) request.
 	//
 	// Returns a wrapper object for the known response body format(s).
 	ListFocusProvidersWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*ListFocusProvidersResponse, error)
 
+	// ConnectGoogleCloudIntegrationWithBodyWithResponse performs a POST /api/v1/integrations/gcp/connect (the `ConnectGoogleCloudIntegration` operationId) request,
+	// with any type of body and a specified content type.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	ConnectGoogleCloudIntegrationWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ConnectGoogleCloudIntegrationResponse, error)
+
+	// ConnectGoogleCloudIntegrationWithResponse performs a POST /api/v1/integrations/gcp/connect (the `ConnectGoogleCloudIntegration` operationId) request.
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	ConnectGoogleCloudIntegrationWithResponse(ctx context.Context, body ConnectGoogleCloudIntegrationJSONRequestBody, reqEditors ...RequestEditorFn) (*ConnectGoogleCloudIntegrationResponse, error)
+
 	// CurrentIdentityWithResponse performs a GET /api/v1/me (the `CurrentIdentity` operationId) request.
 	//
 	// Returns a wrapper object for the known response body format(s).
 	CurrentIdentityWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*CurrentIdentityResponse, error)
+
+	// ListOrganizationTenantsWithResponse performs a GET /api/v1/organizations/{org_id}/tenants (the `ListOrganizationTenants` operationId) request.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	ListOrganizationTenantsWithResponse(ctx context.Context, orgId string, reqEditors ...RequestEditorFn) (*ListOrganizationTenantsResponse, error)
+
+	// CreateOrganizationTenantWithBodyWithResponse performs a POST /api/v1/organizations/{org_id}/tenants (the `CreateOrganizationTenant` operationId) request,
+	// with any type of body and a specified content type.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	CreateOrganizationTenantWithBodyWithResponse(ctx context.Context, orgId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateOrganizationTenantResponse, error)
+
+	// CreateOrganizationTenantWithResponse performs a POST /api/v1/organizations/{org_id}/tenants (the `CreateOrganizationTenant` operationId) request.
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	CreateOrganizationTenantWithResponse(ctx context.Context, orgId string, body CreateOrganizationTenantJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateOrganizationTenantResponse, error)
+
+	// DeleteOrganizationTenantWithResponse performs a DELETE /api/v1/organizations/{org_id}/tenants/{tenant_id} (the `DeleteOrganizationTenant` operationId) request.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	DeleteOrganizationTenantWithResponse(ctx context.Context, orgId string, tenantId string, reqEditors ...RequestEditorFn) (*DeleteOrganizationTenantResponse, error)
+
+	// GetOrganizationTenantWithResponse performs a GET /api/v1/organizations/{org_id}/tenants/{tenant_id} (the `GetOrganizationTenant` operationId) request.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	GetOrganizationTenantWithResponse(ctx context.Context, orgId string, tenantId string, reqEditors ...RequestEditorFn) (*GetOrganizationTenantResponse, error)
+
+	// UpdateOrganizationTenantWithBodyWithResponse performs a PATCH /api/v1/organizations/{org_id}/tenants/{tenant_id} (the `UpdateOrganizationTenant` operationId) request,
+	// with any type of body and a specified content type.
+	//
+	// Returns a wrapper object for the known response body format(s).
+	UpdateOrganizationTenantWithBodyWithResponse(ctx context.Context, orgId string, tenantId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateOrganizationTenantResponse, error)
+
+	// UpdateOrganizationTenantWithResponse performs a PATCH /api/v1/organizations/{org_id}/tenants/{tenant_id} (the `UpdateOrganizationTenant` operationId) request.
+	// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+	UpdateOrganizationTenantWithResponse(ctx context.Context, orgId string, tenantId string, body UpdateOrganizationTenantJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateOrganizationTenantResponse, error)
 }
 
 type ListIntegrationConnectionsResponse struct {
@@ -728,6 +2127,150 @@ func (r ListIntegrationConnectionsResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r ListIntegrationConnectionsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CreateAIGatewayConnectionResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON201 the response for an HTTP 201 `application/json` response
+	JSON201 *ConnectionResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *ErrorResponse
+}
+
+// GetJSON201 returns the response for an HTTP 201 `application/json` response
+func (r CreateAIGatewayConnectionResponse) GetJSON201() *ConnectionResponse {
+	return r.JSON201
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r CreateAIGatewayConnectionResponse) GetJSONDefault() *ErrorResponse {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r CreateAIGatewayConnectionResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateAIGatewayConnectionResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateAIGatewayConnectionResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CreateAIGatewayConnectionResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type SearchAIGatewayModelsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *CatalogModelListResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r SearchAIGatewayModelsResponse) GetJSON200() *CatalogModelListResponse {
+	return r.JSON200
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r SearchAIGatewayModelsResponse) GetJSONDefault() *ErrorResponse {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r SearchAIGatewayModelsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r SearchAIGatewayModelsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r SearchAIGatewayModelsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r SearchAIGatewayModelsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ConnectAWSIntegrationResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON201 the response for an HTTP 201 `application/json` response
+	JSON201 *ConnectedIntegrationResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *ErrorResponse
+}
+
+// GetJSON201 returns the response for an HTTP 201 `application/json` response
+func (r ConnectAWSIntegrationResponse) GetJSON201() *ConnectedIntegrationResponse {
+	return r.JSON201
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r ConnectAWSIntegrationResponse) GetJSONDefault() *ErrorResponse {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r ConnectAWSIntegrationResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ConnectAWSIntegrationResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ConnectAWSIntegrationResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ConnectAWSIntegrationResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -926,6 +2469,294 @@ func (r RenameIntegrationConnectionResponse) ContentType() string {
 	return ""
 }
 
+type GetAIGatewaySettingsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *AIGatewaySettingsResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetAIGatewaySettingsResponse) GetJSON200() *AIGatewaySettingsResponse {
+	return r.JSON200
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r GetAIGatewaySettingsResponse) GetJSONDefault() *ErrorResponse {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r GetAIGatewaySettingsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetAIGatewaySettingsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAIGatewaySettingsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetAIGatewaySettingsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type UpdateAIGatewayConnectionResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *ConnectionResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r UpdateAIGatewayConnectionResponse) GetJSON200() *ConnectionResponse {
+	return r.JSON200
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r UpdateAIGatewayConnectionResponse) GetJSONDefault() *ErrorResponse {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r UpdateAIGatewayConnectionResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateAIGatewayConnectionResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateAIGatewayConnectionResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r UpdateAIGatewayConnectionResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetAWSIntegrationSettingsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *AWSConnectionSettingsResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetAWSIntegrationSettingsResponse) GetJSON200() *AWSConnectionSettingsResponse {
+	return r.JSON200
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r GetAWSIntegrationSettingsResponse) GetJSONDefault() *ErrorResponse {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r GetAWSIntegrationSettingsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetAWSIntegrationSettingsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetAWSIntegrationSettingsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetAWSIntegrationSettingsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type UpdateAWSIntegrationSettingsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *AWSConnectionSettingsResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r UpdateAWSIntegrationSettingsResponse) GetJSON200() *AWSConnectionSettingsResponse {
+	return r.JSON200
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r UpdateAWSIntegrationSettingsResponse) GetJSONDefault() *ErrorResponse {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r UpdateAWSIntegrationSettingsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateAWSIntegrationSettingsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateAWSIntegrationSettingsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r UpdateAWSIntegrationSettingsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetGoogleCloudIntegrationSettingsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *GCPConnectionSettingsResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetGoogleCloudIntegrationSettingsResponse) GetJSON200() *GCPConnectionSettingsResponse {
+	return r.JSON200
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r GetGoogleCloudIntegrationSettingsResponse) GetJSONDefault() *ErrorResponse {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r GetGoogleCloudIntegrationSettingsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetGoogleCloudIntegrationSettingsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetGoogleCloudIntegrationSettingsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetGoogleCloudIntegrationSettingsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type UpdateGoogleCloudIntegrationSettingsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *GCPConnectionSettingsResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r UpdateGoogleCloudIntegrationSettingsResponse) GetJSON200() *GCPConnectionSettingsResponse {
+	return r.JSON200
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r UpdateGoogleCloudIntegrationSettingsResponse) GetJSONDefault() *ErrorResponse {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r UpdateGoogleCloudIntegrationSettingsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateGoogleCloudIntegrationSettingsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateGoogleCloudIntegrationSettingsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r UpdateGoogleCloudIntegrationSettingsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 type ListFocusProvidersResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -968,6 +2799,54 @@ func (r ListFocusProvidersResponse) StatusCode() int {
 
 // ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
 func (r ListFocusProvidersResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type ConnectGoogleCloudIntegrationResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON201 the response for an HTTP 201 `application/json` response
+	JSON201 *ConnectedIntegrationResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *ErrorResponse
+}
+
+// GetJSON201 returns the response for an HTTP 201 `application/json` response
+func (r ConnectGoogleCloudIntegrationResponse) GetJSON201() *ConnectedIntegrationResponse {
+	return r.JSON201
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r ConnectGoogleCloudIntegrationResponse) GetJSONDefault() *ErrorResponse {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r ConnectGoogleCloudIntegrationResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ConnectGoogleCloudIntegrationResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ConnectGoogleCloudIntegrationResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ConnectGoogleCloudIntegrationResponse) ContentType() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Header.Get("Content-Type")
 	}
@@ -1022,6 +2901,246 @@ func (r CurrentIdentityResponse) ContentType() string {
 	return ""
 }
 
+type ListOrganizationTenantsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *ManagedTenantListResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r ListOrganizationTenantsResponse) GetJSON200() *ManagedTenantListResponse {
+	return r.JSON200
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r ListOrganizationTenantsResponse) GetJSONDefault() *ErrorResponse {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r ListOrganizationTenantsResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r ListOrganizationTenantsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r ListOrganizationTenantsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r ListOrganizationTenantsResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type CreateOrganizationTenantResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON201 the response for an HTTP 201 `application/json` response
+	JSON201 *ManagedTenantResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *ErrorResponse
+}
+
+// GetJSON201 returns the response for an HTTP 201 `application/json` response
+func (r CreateOrganizationTenantResponse) GetJSON201() *ManagedTenantResponse {
+	return r.JSON201
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r CreateOrganizationTenantResponse) GetJSONDefault() *ErrorResponse {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r CreateOrganizationTenantResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r CreateOrganizationTenantResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r CreateOrganizationTenantResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r CreateOrganizationTenantResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type DeleteOrganizationTenantResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *SuccessResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r DeleteOrganizationTenantResponse) GetJSON200() *SuccessResponse {
+	return r.JSON200
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r DeleteOrganizationTenantResponse) GetJSONDefault() *ErrorResponse {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r DeleteOrganizationTenantResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteOrganizationTenantResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteOrganizationTenantResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r DeleteOrganizationTenantResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type GetOrganizationTenantResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *ManagedTenantResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r GetOrganizationTenantResponse) GetJSON200() *ManagedTenantResponse {
+	return r.JSON200
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r GetOrganizationTenantResponse) GetJSONDefault() *ErrorResponse {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r GetOrganizationTenantResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r GetOrganizationTenantResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetOrganizationTenantResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r GetOrganizationTenantResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
+type UpdateOrganizationTenantResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	// JSON200 the response for an HTTP 200 `application/json` response
+	JSON200 *ManagedTenantResponse
+	// JSONDefault the response for an HTTP default `application/json` response
+	JSONDefault *ErrorResponse
+}
+
+// GetJSON200 returns the response for an HTTP 200 `application/json` response
+func (r UpdateOrganizationTenantResponse) GetJSON200() *ManagedTenantResponse {
+	return r.JSON200
+}
+
+// GetJSONDefault returns the response for an HTTP default `application/json` response
+func (r UpdateOrganizationTenantResponse) GetJSONDefault() *ErrorResponse {
+	return r.JSONDefault
+}
+
+// GetBody returns the raw response body bytes
+func (r UpdateOrganizationTenantResponse) GetBody() []byte {
+	return r.Body
+}
+
+// Status returns HTTPResponse.Status
+func (r UpdateOrganizationTenantResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r UpdateOrganizationTenantResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// ContentType is a convenience method to retrieve the Content-Type value from the HTTP response headers
+func (r UpdateOrganizationTenantResponse) ContentType() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Header.Get("Content-Type")
+	}
+	return ""
+}
+
 // ListIntegrationConnectionsWithResponse performs a GET /api/v1/integrations (the `ListIntegrationConnections` operationId) request.
 //
 // Returns a wrapper object for the known response body format(s).
@@ -1031,6 +3150,61 @@ func (c *ClientWithResponses) ListIntegrationConnectionsWithResponse(ctx context
 		return nil, err
 	}
 	return ParseListIntegrationConnectionsResponse(rsp)
+}
+
+// CreateAIGatewayConnectionWithBodyWithResponse performs a POST /api/v1/integrations/ai-gateway/connect (the `CreateAIGatewayConnection` operationId) request,
+// with any type of body and a specified content type.
+//
+// Returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) CreateAIGatewayConnectionWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateAIGatewayConnectionResponse, error) {
+	rsp, err := c.CreateAIGatewayConnectionWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateAIGatewayConnectionResponse(rsp)
+}
+
+// CreateAIGatewayConnectionWithResponse performs a POST /api/v1/integrations/ai-gateway/connect (the `CreateAIGatewayConnection` operationId) request.
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) CreateAIGatewayConnectionWithResponse(ctx context.Context, body CreateAIGatewayConnectionJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateAIGatewayConnectionResponse, error) {
+	rsp, err := c.CreateAIGatewayConnection(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateAIGatewayConnectionResponse(rsp)
+}
+
+// SearchAIGatewayModelsWithResponse performs a GET /api/v1/integrations/ai-gateway/models (the `SearchAIGatewayModels` operationId) request.
+//
+// Returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) SearchAIGatewayModelsWithResponse(ctx context.Context, params *SearchAIGatewayModelsParams, reqEditors ...RequestEditorFn) (*SearchAIGatewayModelsResponse, error) {
+	rsp, err := c.SearchAIGatewayModels(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseSearchAIGatewayModelsResponse(rsp)
+}
+
+// ConnectAWSIntegrationWithBodyWithResponse performs a POST /api/v1/integrations/aws/connect (the `ConnectAWSIntegration` operationId) request,
+// with any type of body and a specified content type.
+//
+// Returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) ConnectAWSIntegrationWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ConnectAWSIntegrationResponse, error) {
+	rsp, err := c.ConnectAWSIntegrationWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectAWSIntegrationResponse(rsp)
+}
+
+// ConnectAWSIntegrationWithResponse performs a POST /api/v1/integrations/aws/connect (the `ConnectAWSIntegration` operationId) request.
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) ConnectAWSIntegrationWithResponse(ctx context.Context, body ConnectAWSIntegrationJSONRequestBody, reqEditors ...RequestEditorFn) (*ConnectAWSIntegrationResponse, error) {
+	rsp, err := c.ConnectAWSIntegration(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectAWSIntegrationResponse(rsp)
 }
 
 // CreateFocusPushConnectionWithBodyWithResponse performs a POST /api/v1/integrations/connections (the `CreateFocusPushConnection` operationId) request,
@@ -1099,6 +3273,105 @@ func (c *ClientWithResponses) RenameIntegrationConnectionWithResponse(ctx contex
 	return ParseRenameIntegrationConnectionResponse(rsp)
 }
 
+// GetAIGatewaySettingsWithResponse performs a GET /api/v1/integrations/connections/{id}/ai-gateway (the `GetAIGatewaySettings` operationId) request.
+//
+// Returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) GetAIGatewaySettingsWithResponse(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*GetAIGatewaySettingsResponse, error) {
+	rsp, err := c.GetAIGatewaySettings(ctx, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAIGatewaySettingsResponse(rsp)
+}
+
+// UpdateAIGatewayConnectionWithBodyWithResponse performs a PATCH /api/v1/integrations/connections/{id}/ai-gateway (the `UpdateAIGatewayConnection` operationId) request,
+// with any type of body and a specified content type.
+//
+// Returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) UpdateAIGatewayConnectionWithBodyWithResponse(ctx context.Context, id string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateAIGatewayConnectionResponse, error) {
+	rsp, err := c.UpdateAIGatewayConnectionWithBody(ctx, id, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateAIGatewayConnectionResponse(rsp)
+}
+
+// UpdateAIGatewayConnectionWithResponse performs a PATCH /api/v1/integrations/connections/{id}/ai-gateway (the `UpdateAIGatewayConnection` operationId) request.
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) UpdateAIGatewayConnectionWithResponse(ctx context.Context, id string, body UpdateAIGatewayConnectionJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateAIGatewayConnectionResponse, error) {
+	rsp, err := c.UpdateAIGatewayConnection(ctx, id, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateAIGatewayConnectionResponse(rsp)
+}
+
+// GetAWSIntegrationSettingsWithResponse performs a GET /api/v1/integrations/connections/{id}/aws (the `GetAWSIntegrationSettings` operationId) request.
+//
+// Returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) GetAWSIntegrationSettingsWithResponse(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*GetAWSIntegrationSettingsResponse, error) {
+	rsp, err := c.GetAWSIntegrationSettings(ctx, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetAWSIntegrationSettingsResponse(rsp)
+}
+
+// UpdateAWSIntegrationSettingsWithBodyWithResponse performs a PATCH /api/v1/integrations/connections/{id}/aws (the `UpdateAWSIntegrationSettings` operationId) request,
+// with any type of body and a specified content type.
+//
+// Returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) UpdateAWSIntegrationSettingsWithBodyWithResponse(ctx context.Context, id string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateAWSIntegrationSettingsResponse, error) {
+	rsp, err := c.UpdateAWSIntegrationSettingsWithBody(ctx, id, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateAWSIntegrationSettingsResponse(rsp)
+}
+
+// UpdateAWSIntegrationSettingsWithResponse performs a PATCH /api/v1/integrations/connections/{id}/aws (the `UpdateAWSIntegrationSettings` operationId) request.
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) UpdateAWSIntegrationSettingsWithResponse(ctx context.Context, id string, body UpdateAWSIntegrationSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateAWSIntegrationSettingsResponse, error) {
+	rsp, err := c.UpdateAWSIntegrationSettings(ctx, id, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateAWSIntegrationSettingsResponse(rsp)
+}
+
+// GetGoogleCloudIntegrationSettingsWithResponse performs a GET /api/v1/integrations/connections/{id}/gcp (the `GetGoogleCloudIntegrationSettings` operationId) request.
+//
+// Returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) GetGoogleCloudIntegrationSettingsWithResponse(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*GetGoogleCloudIntegrationSettingsResponse, error) {
+	rsp, err := c.GetGoogleCloudIntegrationSettings(ctx, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetGoogleCloudIntegrationSettingsResponse(rsp)
+}
+
+// UpdateGoogleCloudIntegrationSettingsWithBodyWithResponse performs a PATCH /api/v1/integrations/connections/{id}/gcp (the `UpdateGoogleCloudIntegrationSettings` operationId) request,
+// with any type of body and a specified content type.
+//
+// Returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) UpdateGoogleCloudIntegrationSettingsWithBodyWithResponse(ctx context.Context, id string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateGoogleCloudIntegrationSettingsResponse, error) {
+	rsp, err := c.UpdateGoogleCloudIntegrationSettingsWithBody(ctx, id, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateGoogleCloudIntegrationSettingsResponse(rsp)
+}
+
+// UpdateGoogleCloudIntegrationSettingsWithResponse performs a PATCH /api/v1/integrations/connections/{id}/gcp (the `UpdateGoogleCloudIntegrationSettings` operationId) request.
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) UpdateGoogleCloudIntegrationSettingsWithResponse(ctx context.Context, id string, body UpdateGoogleCloudIntegrationSettingsJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateGoogleCloudIntegrationSettingsResponse, error) {
+	rsp, err := c.UpdateGoogleCloudIntegrationSettings(ctx, id, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateGoogleCloudIntegrationSettingsResponse(rsp)
+}
+
 // ListFocusProvidersWithResponse performs a GET /api/v1/integrations/focus/providers (the `ListFocusProviders` operationId) request.
 //
 // Returns a wrapper object for the known response body format(s).
@@ -1110,6 +3383,28 @@ func (c *ClientWithResponses) ListFocusProvidersWithResponse(ctx context.Context
 	return ParseListFocusProvidersResponse(rsp)
 }
 
+// ConnectGoogleCloudIntegrationWithBodyWithResponse performs a POST /api/v1/integrations/gcp/connect (the `ConnectGoogleCloudIntegration` operationId) request,
+// with any type of body and a specified content type.
+//
+// Returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) ConnectGoogleCloudIntegrationWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*ConnectGoogleCloudIntegrationResponse, error) {
+	rsp, err := c.ConnectGoogleCloudIntegrationWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectGoogleCloudIntegrationResponse(rsp)
+}
+
+// ConnectGoogleCloudIntegrationWithResponse performs a POST /api/v1/integrations/gcp/connect (the `ConnectGoogleCloudIntegration` operationId) request.
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) ConnectGoogleCloudIntegrationWithResponse(ctx context.Context, body ConnectGoogleCloudIntegrationJSONRequestBody, reqEditors ...RequestEditorFn) (*ConnectGoogleCloudIntegrationResponse, error) {
+	rsp, err := c.ConnectGoogleCloudIntegration(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseConnectGoogleCloudIntegrationResponse(rsp)
+}
+
 // CurrentIdentityWithResponse performs a GET /api/v1/me (the `CurrentIdentity` operationId) request.
 //
 // Returns a wrapper object for the known response body format(s).
@@ -1119,6 +3414,83 @@ func (c *ClientWithResponses) CurrentIdentityWithResponse(ctx context.Context, r
 		return nil, err
 	}
 	return ParseCurrentIdentityResponse(rsp)
+}
+
+// ListOrganizationTenantsWithResponse performs a GET /api/v1/organizations/{org_id}/tenants (the `ListOrganizationTenants` operationId) request.
+//
+// Returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) ListOrganizationTenantsWithResponse(ctx context.Context, orgId string, reqEditors ...RequestEditorFn) (*ListOrganizationTenantsResponse, error) {
+	rsp, err := c.ListOrganizationTenants(ctx, orgId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseListOrganizationTenantsResponse(rsp)
+}
+
+// CreateOrganizationTenantWithBodyWithResponse performs a POST /api/v1/organizations/{org_id}/tenants (the `CreateOrganizationTenant` operationId) request,
+// with any type of body and a specified content type.
+//
+// Returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) CreateOrganizationTenantWithBodyWithResponse(ctx context.Context, orgId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*CreateOrganizationTenantResponse, error) {
+	rsp, err := c.CreateOrganizationTenantWithBody(ctx, orgId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateOrganizationTenantResponse(rsp)
+}
+
+// CreateOrganizationTenantWithResponse performs a POST /api/v1/organizations/{org_id}/tenants (the `CreateOrganizationTenant` operationId) request.
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) CreateOrganizationTenantWithResponse(ctx context.Context, orgId string, body CreateOrganizationTenantJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateOrganizationTenantResponse, error) {
+	rsp, err := c.CreateOrganizationTenant(ctx, orgId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseCreateOrganizationTenantResponse(rsp)
+}
+
+// DeleteOrganizationTenantWithResponse performs a DELETE /api/v1/organizations/{org_id}/tenants/{tenant_id} (the `DeleteOrganizationTenant` operationId) request.
+//
+// Returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) DeleteOrganizationTenantWithResponse(ctx context.Context, orgId string, tenantId string, reqEditors ...RequestEditorFn) (*DeleteOrganizationTenantResponse, error) {
+	rsp, err := c.DeleteOrganizationTenant(ctx, orgId, tenantId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteOrganizationTenantResponse(rsp)
+}
+
+// GetOrganizationTenantWithResponse performs a GET /api/v1/organizations/{org_id}/tenants/{tenant_id} (the `GetOrganizationTenant` operationId) request.
+//
+// Returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) GetOrganizationTenantWithResponse(ctx context.Context, orgId string, tenantId string, reqEditors ...RequestEditorFn) (*GetOrganizationTenantResponse, error) {
+	rsp, err := c.GetOrganizationTenant(ctx, orgId, tenantId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetOrganizationTenantResponse(rsp)
+}
+
+// UpdateOrganizationTenantWithBodyWithResponse performs a PATCH /api/v1/organizations/{org_id}/tenants/{tenant_id} (the `UpdateOrganizationTenant` operationId) request,
+// with any type of body and a specified content type.
+//
+// Returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) UpdateOrganizationTenantWithBodyWithResponse(ctx context.Context, orgId string, tenantId string, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*UpdateOrganizationTenantResponse, error) {
+	rsp, err := c.UpdateOrganizationTenantWithBody(ctx, orgId, tenantId, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateOrganizationTenantResponse(rsp)
+}
+
+// UpdateOrganizationTenantWithResponse performs a PATCH /api/v1/organizations/{org_id}/tenants/{tenant_id} (the `UpdateOrganizationTenant` operationId) request.
+// Takes a body of the `application/json` content type, and returns a wrapper object for the known response body format(s).
+func (c *ClientWithResponses) UpdateOrganizationTenantWithResponse(ctx context.Context, orgId string, tenantId string, body UpdateOrganizationTenantJSONRequestBody, reqEditors ...RequestEditorFn) (*UpdateOrganizationTenantResponse, error) {
+	rsp, err := c.UpdateOrganizationTenant(ctx, orgId, tenantId, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseUpdateOrganizationTenantResponse(rsp)
 }
 
 // ParseListIntegrationConnectionsResponse parses an HTTP response from a ListIntegrationConnectionsWithResponse call
@@ -1141,6 +3513,105 @@ func ParseListIntegrationConnectionsResponse(rsp *http.Response) (*ListIntegrati
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateAIGatewayConnectionResponse parses an HTTP response from a CreateAIGatewayConnectionWithResponse call
+func ParseCreateAIGatewayConnectionResponse(rsp *http.Response) (*CreateAIGatewayConnectionResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateAIGatewayConnectionResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest ConnectionResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseSearchAIGatewayModelsResponse parses an HTTP response from a SearchAIGatewayModelsWithResponse call
+func ParseSearchAIGatewayModelsResponse(rsp *http.Response) (*SearchAIGatewayModelsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &SearchAIGatewayModelsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest CatalogModelListResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseConnectAWSIntegrationResponse parses an HTTP response from a ConnectAWSIntegrationWithResponse call
+func ParseConnectAWSIntegrationResponse(rsp *http.Response) (*ConnectAWSIntegrationResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ConnectAWSIntegrationResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest ConnectedIntegrationResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
 
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
 		var dest ErrorResponse
@@ -1292,6 +3763,204 @@ func ParseRenameIntegrationConnectionResponse(rsp *http.Response) (*RenameIntegr
 	return response, nil
 }
 
+// ParseGetAIGatewaySettingsResponse parses an HTTP response from a GetAIGatewaySettingsWithResponse call
+func ParseGetAIGatewaySettingsResponse(rsp *http.Response) (*GetAIGatewaySettingsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetAIGatewaySettingsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AIGatewaySettingsResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateAIGatewayConnectionResponse parses an HTTP response from a UpdateAIGatewayConnectionWithResponse call
+func ParseUpdateAIGatewayConnectionResponse(rsp *http.Response) (*UpdateAIGatewayConnectionResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateAIGatewayConnectionResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ConnectionResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetAWSIntegrationSettingsResponse parses an HTTP response from a GetAWSIntegrationSettingsWithResponse call
+func ParseGetAWSIntegrationSettingsResponse(rsp *http.Response) (*GetAWSIntegrationSettingsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetAWSIntegrationSettingsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AWSConnectionSettingsResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateAWSIntegrationSettingsResponse parses an HTTP response from a UpdateAWSIntegrationSettingsWithResponse call
+func ParseUpdateAWSIntegrationSettingsResponse(rsp *http.Response) (*UpdateAWSIntegrationSettingsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateAWSIntegrationSettingsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest AWSConnectionSettingsResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetGoogleCloudIntegrationSettingsResponse parses an HTTP response from a GetGoogleCloudIntegrationSettingsWithResponse call
+func ParseGetGoogleCloudIntegrationSettingsResponse(rsp *http.Response) (*GetGoogleCloudIntegrationSettingsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetGoogleCloudIntegrationSettingsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest GCPConnectionSettingsResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateGoogleCloudIntegrationSettingsResponse parses an HTTP response from a UpdateGoogleCloudIntegrationSettingsWithResponse call
+func ParseUpdateGoogleCloudIntegrationSettingsResponse(rsp *http.Response) (*UpdateGoogleCloudIntegrationSettingsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateGoogleCloudIntegrationSettingsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest GCPConnectionSettingsResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseListFocusProvidersResponse parses an HTTP response from a ListFocusProvidersWithResponse call
 func ParseListFocusProvidersResponse(rsp *http.Response) (*ListFocusProvidersResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -1325,6 +3994,39 @@ func ParseListFocusProvidersResponse(rsp *http.Response) (*ListFocusProvidersRes
 	return response, nil
 }
 
+// ParseConnectGoogleCloudIntegrationResponse parses an HTTP response from a ConnectGoogleCloudIntegrationWithResponse call
+func ParseConnectGoogleCloudIntegrationResponse(rsp *http.Response) (*ConnectGoogleCloudIntegrationResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ConnectGoogleCloudIntegrationResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest ConnectedIntegrationResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
 // ParseCurrentIdentityResponse parses an HTTP response from a CurrentIdentityWithResponse call
 func ParseCurrentIdentityResponse(rsp *http.Response) (*CurrentIdentityResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -1341,6 +4043,171 @@ func ParseCurrentIdentityResponse(rsp *http.Response) (*CurrentIdentityResponse,
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest IdentityResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseListOrganizationTenantsResponse parses an HTTP response from a ListOrganizationTenantsWithResponse call
+func ParseListOrganizationTenantsResponse(rsp *http.Response) (*ListOrganizationTenantsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &ListOrganizationTenantsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ManagedTenantListResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseCreateOrganizationTenantResponse parses an HTTP response from a CreateOrganizationTenantWithResponse call
+func ParseCreateOrganizationTenantResponse(rsp *http.Response) (*CreateOrganizationTenantResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &CreateOrganizationTenantResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest ManagedTenantResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseDeleteOrganizationTenantResponse parses an HTTP response from a DeleteOrganizationTenantWithResponse call
+func ParseDeleteOrganizationTenantResponse(rsp *http.Response) (*DeleteOrganizationTenantResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteOrganizationTenantResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest SuccessResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetOrganizationTenantResponse parses an HTTP response from a GetOrganizationTenantWithResponse call
+func ParseGetOrganizationTenantResponse(rsp *http.Response) (*GetOrganizationTenantResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetOrganizationTenantResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ManagedTenantResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && true:
+		var dest ErrorResponse
+		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSONDefault = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseUpdateOrganizationTenantResponse parses an HTTP response from a UpdateOrganizationTenantWithResponse call
+func ParseUpdateOrganizationTenantResponse(rsp *http.Response) (*UpdateOrganizationTenantResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &UpdateOrganizationTenantResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest ManagedTenantResponse
 		if err := runtime.JSONUnmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}

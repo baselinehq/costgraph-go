@@ -3,15 +3,16 @@
 ## Scope
 
 - This module is the importable management client used by the CostGraph Terraform provider. Keep Terraform schemas, state, diagnostics, imports, and lifecycle decisions in the provider repository.
-- The initial client covers API-key identity, the FOCUS billing-provider catalog, tenant-scoped connection listing, and FOCUS push connection creation, lookup, rename, and disconnect. It is not a complete CostGraph SDK.
+- The client covers API-key identity, provider and connection discovery, FOCUS push lifecycle, organization tenant administration, AWS role connections, Google Cloud impersonation connections, and AI gateway settings. It is not a complete CostGraph SDK.
 - Match the actual public API. Inspect its routes, authentication, request/response envelopes, tenant boundaries, and permissions before adding an operation. A dashboard endpoint does not establish API-key access.
-- The single-connection read contract is introduced by the separate backend Terraform integration contract change. Do not claim availability on deployments that lack that change.
+- The read and management contracts are introduced by separate backend Terraform integration and management changes. Do not claim availability on deployments that lack those changes.
+- Organization tenant and cloud administration require an active organization owner and explicit `organization:manage` scope. Do not weaken or implicitly add that scope. Cloud SDK requests support AWS roles and Google Cloud impersonation only.
 
 ## Contract and client
 
 - `api/management.openapi.json` is a reviewed OpenAPI 3 subset, not a live schema download. Keep its provenance accurate. Add stable operation identifiers and typed success/error envelopes.
 - Generate `internal/api/client.gen.go` with `make generate`. The generator version is pinned in the Makefile. Commit generated changes; never hand-edit generated Go or fetch a changing upstream schema during a normal build.
-- Keep the public facade in package `costgraph`. Preserve null/omitted values where the API distinguishes them. Add only the API capabilities the caller needs.
+- Keep the public facade in package `costgraph`. Preserve null/omitted values where the API distinguishes them. Use optional scalar and map pointers for partial updates; nil preserves, while an explicit empty value clears only when the API supports it. Add only the API capabilities the caller needs.
 - Every operation uses the configured deployment URL and `X-API-Key`. Support deployment roots and reverse-proxy path prefixes. Never fall back to the hosted API or read a browser/CLI credential file.
 - Retain normal certificate verification. Do not follow redirects with credentials. Do not expose API keys, request URLs, raw response bodies, or arbitrary server messages in diagnostics.
 - Use contexts and bounded request timeouts. Do not retry non-idempotent writes automatically. Treat permission/transport errors separately from resource absence.
