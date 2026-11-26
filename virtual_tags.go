@@ -9,6 +9,9 @@ import (
 	"github.com/google/uuid"
 )
 
+const ScopeVirtualTagsRead = "virtual-tags:read"
+const ScopeVirtualTagsWrite = "virtual-tags:write"
+
 func virtualTagTenant(tenantID string) error {
 	if _, err := uuid.Parse(tenantID); err != nil {
 		return errors.New("virtual tag tenant_id must be a UUID")
