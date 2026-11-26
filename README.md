@@ -21,6 +21,15 @@ identity, err := client.CurrentIdentity(ctx)
 
 Import the package with `github.com/baselinehq/costgraph-go`. The client uses `X-API-Key`, a 30-second request timeout, and standard certificate verification. HTTP is supported for local test deployments. Supply a configured HTTP client with `costgraph.WithHTTPClient` when needed. The SDK copies that client and disables redirects so credentials do not follow a redirect to another endpoint.
 
+The same client constructor supports self-hosted API roots and reverse proxies.
+
+```go
+selfHosted, err := costgraph.New("https://costgraph.internal.example.com", apiKey)
+proxied, err := costgraph.New("https://platform.example.com/costgraph", apiKey)
+```
+
+Those clients call `/api/v1/...` and `/costgraph/api/v1/...` respectively. Use the API host rather than the dashboard host.
+
 API keys are tenant-bound. Connection listing uses that authorized tenant. Creating a push connection can omit `TenantID` to use the key's tenant; providing a different tenant does not grant access to it. Identity organization fields are optional pointers because the API can omit them.
 
 ## Manage a push connection

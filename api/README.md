@@ -2,7 +2,7 @@
 
 `management.openapi.json` is a reviewed OpenAPI 3.0.3 subset used to generate the internal HTTP client and models. It contains seven operations for the initial FOCUS push connection lifecycle.
 
-The source baseline is backend commit `923e81f496bb1be4fa5e064afce746d0c19ae755`. The new `GetIntegrationConnection` operation is supplied by the separate `feat/terraform-integration-contract` backend change. Stable operation identifiers for the other integration operations come from that change too. At SDK creation, the backend change was not deployed.
+The source baseline is backend commit `923e81f496bb1be4fa5e064afce746d0c19ae755`. The new `GetIntegrationConnection` operation is supplied by the separate `feat/terraform-integration-contract` backend change. Stable operation identifiers for the other integration operations come from that change too. The read contract and stable identifiers are committed in backend `fe88f2994d819e1ebb131b1f723766f48fff697a`. At SDK creation, the backend change was not deployed.
 
 The full Swagger artifact generated from that backend checkout with its pinned `swag` v1.16.6 has SHA256 `487a650ffcb4d01de620c31586131d7067481ee0604efcae7fdbbd09ef7d11e7`. It is supporting research evidence, not a build input. The relevant source files are `controllers/integrations/integrations.go`, `controllers/integrations/registry.go`, `internal/user/user.go`, `responses/success.go`, and `responses/error.go` in the backend repository.
 
